@@ -1,6 +1,11 @@
 package bootstrap
 
-import "os"
+import (
+	"log"
+	"os"
+
+	"github.com/joho/godotenv"
+)
 
 type Config struct {
 	DB_HOST     string
@@ -12,6 +17,10 @@ type Config struct {
 }
 
 func LoadConfig() *Config {
+	err := godotenv.Load()
+	if err != nil{
+		log.Println("[WARN] .env not found or failed to load")
+	}
 	return &Config{
 		DB_HOST:     os.Getenv("DB_HOST"),
 		DB_PORT:     os.Getenv("DB_PORT"),

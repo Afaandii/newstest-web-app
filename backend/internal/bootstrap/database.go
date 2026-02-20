@@ -15,7 +15,7 @@ func Conn(cfg *Config) (*gorm.DB, error){
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		return nil, fmt.Errorf("Open connection error: %v", err)
+		return nil, fmt.Errorf("Open connection error: %w", err)
 	}
 	return db, nil
 }
