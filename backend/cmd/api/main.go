@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"newstest-app/internal/bootstrap"
+	"newstest-app/internal/category"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,6 +19,7 @@ func main() {
 
 	bootstrap.AutoMigrate(db)
 	r := gin.Default()
+	category.RegisterRoutesCategory(r, db)
 
 	if cfg.PORT == "" {
 		cfg.PORT = "8080"
