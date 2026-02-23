@@ -9,6 +9,7 @@ import (
 	"newstest-app/internal/permissions"
 	"newstest-app/internal/posts"
 	"newstest-app/internal/role"
+	"newstest-app/internal/user"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,6 +27,7 @@ func main() {
 	role.RegisterRoutesRole(r, db)
 	permissions.RegisterRoutesPermissions(r, db)
 	posts.RegisterRoutesPosts(r, db)
+	user.RegisterRouteUser(r, db)
 
 	if cfg.PORT == "" {
 		cfg.PORT = "8080"
