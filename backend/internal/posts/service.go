@@ -3,20 +3,20 @@ package posts
 import "newstest-app/internal/shared/model"
 
 type PostRequest struct {
-	UserID     uint   `json:"user_id"`
-	CategoryID uint   `json:"category_id"`
-	Title      string `json:"title"`
-	Slug       string `json:"slug"`
-	Excerpt    string `json:"excerpt"`
-	Content    string `json:"content"`
-	Thumbnail  string `json:"thumbnail"`
+	UserID     uint   `form:"user_id"`
+	CategoryID uint   `form:"category_id"`
+	Title      string `form:"title"`
+	Slug       string `form:"slug"`
+	Excerpt    string `form:"excerpt"`
+	Content    string `form:"content"`
+	Thumbnail  string `form:"thumbnail"`
 }
 
 type Service interface {
 	GetAll() ([]model.Post, error)
 	GetByID(id uint) (*model.Post, error)
 	Create(req PostRequest) (*model.Post, error)
-	Update(id uint, req PostRequest) (*model.Post, error)
+	Update(id uint, req PostRequest, hasNewThumbnail bool) (*model.Post, error)
 	Delete(id uint) error
 }
 
@@ -51,7 +51,7 @@ func (s *service) Create(req PostRequest) (*model.Post, error) {
 	return p, err
 }
 
-func (s *service) Update(id uint, req PostRequest) (*model.Post, error) {
+func (s *service) Update(id uint, req PostRequest, hasNewThumbnail bool) (*model.Post, error) {
 	p, err := s.repo.FindByID(id)
 	if err != nil {
 		return nil, err
@@ -63,7 +63,11 @@ func (s *service) Update(id uint, req PostRequest) (*model.Post, error) {
 	p.Slug = req.Slug
 	p.Excerpt = req.Excerpt
 	p.Content = req.Content
-	p.Thumbnail = req.Thumbnail
+
+	// Only overwrite thumbnail if a new file was actually uploaded
+	if hasNewThumbnail {
+		p.Thumbnail = req.Thumbnail
+	}
 
 	err = s.repo.Update(p)
 	return p, err

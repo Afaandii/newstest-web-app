@@ -4,15 +4,19 @@ import (
 	"net/http"
 	"strconv"
 
+	"newstest-app/internal/bootstrap"
+	supabasepkg "newstest-app/pkg/supabase"
+
 	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
 	service Service
+	cfg     *bootstrap.Config
 }
 
-func NewHandlerPost(service Service) *Handler {
-	return &Handler{service}
+func NewHandlerPost(service Service, cfg *bootstrap.Config) *Handler {
+	return &Handler{service: service, cfg: cfg}
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
@@ -47,11 +51,48 @@ func (h *Handler) GetByID(c *gin.Context) {
 }
 
 func (h *Handler) Create(c *gin.Context) {
-	var req PostRequest
-
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"errors": err.Error()})
+	userID, err := strconv.ParseUint(c.PostForm("user_id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errors": "user_id harus berupa angka"})
 		return
+	}
+	categoryID, err := strconv.ParseUint(c.PostForm("category_id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errors": "category_id harus berupa angka"})
+		return
+	}
+
+	title := c.PostForm("title")
+	slug := c.PostForm("slug")
+	excerpt := c.PostForm("excerpt")
+	content := c.PostForm("content")
+
+	// Thumbnail is optional
+	thumbnailURL := ""
+	file, header, err := c.Request.FormFile("thumbnail")
+	if err == nil {
+		url, uploadErr := supabasepkg.UploadThumbnail(
+			h.cfg.SupabaseURL,
+			h.cfg.SupabaseKey,
+			h.cfg.SupabaseBucketThumbnail,
+			file,
+			header,
+		)
+		if uploadErr != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"errors": "Gagal upload thumbnail: " + uploadErr.Error()})
+			return
+		}
+		thumbnailURL = url
+	}
+
+	req := PostRequest{
+		UserID:     uint(userID),
+		CategoryID: uint(categoryID),
+		Title:      title,
+		Slug:       slug,
+		Excerpt:    excerpt,
+		Content:    content,
+		Thumbnail:  thumbnailURL,
 	}
 
 	post, err := h.service.Create(req)
@@ -73,14 +114,53 @@ func (h *Handler) Update(c *gin.Context) {
 		return
 	}
 
-	var req PostRequest
-
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"errors": err.Error()})
+	userID, err := strconv.ParseUint(c.PostForm("user_id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errors": "user_id harus berupa angka"})
+		return
+	}
+	categoryID, err := strconv.ParseUint(c.PostForm("category_id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errors": "category_id harus berupa angka"})
 		return
 	}
 
-	post, err := h.service.Update(uint(id), req)
+	title := c.PostForm("title")
+	slug := c.PostForm("slug")
+	excerpt := c.PostForm("excerpt")
+	content := c.PostForm("content")
+
+	// Try to get a new thumbnail file
+	newThumbnailURL := ""
+	hasNewThumbnail := false
+	file, header, err := c.Request.FormFile("thumbnail")
+	if err == nil {
+		hasNewThumbnail = true
+		url, uploadErr := supabasepkg.UploadThumbnail(
+			h.cfg.SupabaseURL,
+			h.cfg.SupabaseKey,
+			h.cfg.SupabaseBucketThumbnail,
+			file,
+			header,
+		)
+		if uploadErr != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"errors": "Gagal upload thumbnail: " + uploadErr.Error()})
+			return
+		}
+		newThumbnailURL = url
+	}
+
+	req := PostRequest{
+		UserID:     uint(userID),
+		CategoryID: uint(categoryID),
+		Title:      title,
+		Slug:       slug,
+		Excerpt:    excerpt,
+		Content:    content,
+		Thumbnail:  newThumbnailURL,
+	}
+
+	post, err := h.service.Update(uint(id), req, hasNewThumbnail)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"errors": err.Error()})
 		return

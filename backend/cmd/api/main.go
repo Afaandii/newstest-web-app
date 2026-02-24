@@ -26,8 +26,8 @@ func main() {
 	category.RegisterRoutesCategory(r, db)
 	role.RegisterRoutesRole(r, db)
 	permissions.RegisterRoutesPermissions(r, db)
-	posts.RegisterRoutesPosts(r, db)
-	user.RegisterRouteUser(r, db)
+	posts.RegisterRoutesPosts(r, db, cfg)
+	user.RegisterRouteUser(r, db, cfg)
 
 	if cfg.PORT == "" {
 		cfg.PORT = "8080"
