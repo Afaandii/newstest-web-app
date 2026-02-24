@@ -8,25 +8,33 @@ import (
 )
 
 type Config struct {
-	DB_HOST     string
-	DB_PORT     string
-	DB_USER     string
-	DB_PASSWORD string
-	DB_NAME     string
-	PORT        string
+	DB_HOST                 string
+	DB_PORT                 string
+	DB_USER                 string
+	DB_PASSWORD             string
+	DB_NAME                 string
+	PORT                    string
+	SupabaseURL             string
+	SupabaseKey             string
+	SupabaseBucketAvatar    string
+	SupabaseBucketThumbnail string
 }
 
 func LoadConfig() *Config {
 	err := godotenv.Load()
-	if err != nil{
+	if err != nil {
 		log.Println("[WARN] .env not found or failed to load")
 	}
 	return &Config{
-		DB_HOST:     os.Getenv("DB_HOST"),
-		DB_PORT:     os.Getenv("DB_PORT"),
-		DB_USER:     os.Getenv("DB_USER"),
-		DB_PASSWORD: os.Getenv("DB_PASSWORD"),
-		DB_NAME:     os.Getenv("DB_NAME"),
-		PORT:        os.Getenv("PORT")	,
+		DB_HOST:                 os.Getenv("DB_HOST"),
+		DB_PORT:                 os.Getenv("DB_PORT"),
+		DB_USER:                 os.Getenv("DB_USER"),
+		DB_PASSWORD:             os.Getenv("DB_PASSWORD"),
+		DB_NAME:                 os.Getenv("DB_NAME"),
+		PORT:                    os.Getenv("PORT"),
+		SupabaseURL:             os.Getenv("SUPABASE_URL"),
+		SupabaseKey:             os.Getenv("SUPABASE_KEY"),
+		SupabaseBucketAvatar:    os.Getenv("SUPABASE_BUCKET_AVATARS"),
+		SupabaseBucketThumbnail: os.Getenv("SUPABASE_BUCKET_THUMBNAILS"),
 	}
 }
