@@ -30,7 +30,7 @@ import {
 
 const navGroups = [
   {
-    title: "Utama",
+    title: "Main",
     items: [
       {
         title: "Dashboard",
@@ -38,47 +38,47 @@ const navGroups = [
         icon: LayoutDashboard,
       },
       {
-        title: "Ringkasan",
+        title: "Analytics",
         href: "/dashboard/analytics",
         icon: BarChart3,
       },
     ],
   },
   {
-    title: "Konten",
+    title: "Content",
     items: [
       {
-        title: "Semua Post",
+        title: "All Posts",
         href: "/dashboard/posts",
         icon: FileText,
       },
       {
-        title: "Kategori",
+        title: "Categories",
         href: "/dashboard/categories",
         icon: FolderTree,
       },
     ],
   },
   {
-    title: "Manajemen",
+    title: "Management",
     items: [
       {
-        title: "Pengguna",
+        title: "Users",
         href: "/dashboard/users",
         icon: Users,
       },
       {
-        title: "Pengaturan",
+        title: "Settings",
         href: "/dashboard/settings",
         icon: Settings,
       },
     ],
   },
   {
-    title: "Lainnya",
+    title: "Other",
     items: [
       {
-        title: "Bantuan",
+        title: "Help Center",
         href: "/dashboard/help",
         icon: HelpCircle,
       },

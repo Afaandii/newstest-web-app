@@ -69,7 +69,7 @@ export function AdminHeader() {
         {/* Search Mock */}
         <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-md border bg-muted/50 text-muted-foreground transition-colors hover:bg-muted cursor-pointer shrink-0">
           <Search className="size-4" />
-          <span className="text-sm">Cari...</span>
+          <span className="text-sm">Search...</span>
           <kbd className="pointer-events-none ml-2 hidden h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
             <span className="text-xs">⌘</span>K
           </kbd>
