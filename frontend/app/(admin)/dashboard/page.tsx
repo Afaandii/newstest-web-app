@@ -27,27 +27,27 @@ import { cn } from "@/lib/utils";
 
 const statsCards = [
   {
-    title: "Total Pengguna",
+    title: "Total Users",
     value: "1,234",
     change: "+12%",
     icon: Users,
-    description: "dari bulan lalu",
+    description: "from last month",
     trend: "up",
   },
   {
-    title: "Total Post",
+    title: "Total Posts",
     value: "456",
     change: "+8%",
     icon: FileText,
-    description: "dari bulan lalu",
+    description: "from last month",
     trend: "up",
   },
   {
-    title: "Total View",
+    title: "Total Views",
     value: "89,012",
     change: "+23%",
     icon: Eye,
-    description: "dari bulan lalu",
+    description: "from last month",
     trend: "up",
   },
   {
@@ -55,7 +55,7 @@ const statsCards = [
     value: "34.5%",
     change: "+5.2%",
     icon: TrendingUp,
-    description: "dari bulan lalu",
+    description: "from last month",
     trend: "up",
   },
 ];
@@ -63,7 +63,7 @@ const statsCards = [
 const recentPosts = [
   {
     id: 1,
-    title: "Breaking: Teknologi AI Terbaru 2026",
+    title: "Breaking: Latest AI Technology 2026",
     author: "Admin Afandi",
     status: "Published",
     date: "25 Feb 2026",
@@ -71,7 +71,7 @@ const recentPosts = [
   },
   {
     id: 2,
-    title: "Update Kebijakan Privasi Data",
+    title: "Privacy Policy Update",
     author: "Editor",
     status: "Draft",
     date: "24 Feb 2026",
@@ -79,7 +79,7 @@ const recentPosts = [
   },
   {
     id: 3,
-    title: "Tips Produktivitas untuk Developer",
+    title: "Productivity Tips for Developers",
     author: "Admin Afandi",
     status: "Published",
     date: "23 Feb 2026",
@@ -87,7 +87,7 @@ const recentPosts = [
   },
   {
     id: 4,
-    title: "Review Smartphone Terbaik 2026",
+    title: "Best Smartphones Review 2026",
     author: "Contributor",
     status: "Review",
     date: "22 Feb 2026",
@@ -95,7 +95,7 @@ const recentPosts = [
   },
   {
     id: 5,
-    title: "Panduan Belajar Next.js untuk Pemula",
+    title: "Next.js Learning Guide for Beginners",
     author: "Admin Afandi",
     status: "Published",
     date: "21 Feb 2026",
@@ -125,11 +125,11 @@ export default function DashboardPage() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
             <p className="text-muted-foreground mt-1">
-              Selamat datang kembali, berikut statistik performa NewsTest hari ini.
+              Welcome back, here is your NewsTest performance overview for today.
             </p>
           </div>
           <Button className="shadow-md">
-            <Plus className="mr-2 size-4" /> Buat Post Baru
+            <Plus className="mr-2 size-4" /> Create New Post
           </Button>
         </div>
 
@@ -163,16 +163,16 @@ export default function DashboardPage() {
           {/* Main Table */}
           <Card className="lg:col-span-4 shadow-sm border-muted-foreground/10">
             <CardHeader className="pb-3">
-              <CardTitle>Aktivitas Post Terbaru</CardTitle>
+              <CardTitle>Recent Post Activity</CardTitle>
               <CardDescription>
-                Daftar semua artikel yang baru saja diproses oleh tim editorial.
+                A list of all articles recently processed by the editorial team.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">
-                    <TableHead className="w-[300px]">Judul Artikel</TableHead>
+                    <TableHead className="w-[300px]">Article Title</TableHead>
                     <TableHead>Author</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Views</TableHead>
@@ -205,16 +205,16 @@ export default function DashboardPage() {
             <CardHeader>
               <CardTitle>Top Categories</CardTitle>
               <CardDescription>
-                Kategori berita paling populer minggu ini.
+                Most popular news categories this week.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 {[
-                  { name: "Teknologi", count: "45%", color: "bg-blue-500" },
-                  { name: "Ekonomi", count: "30%", color: "bg-emerald-500" },
-                  { name: "Politik", count: "15%", color: "bg-amber-500" },
-                  { name: "Gaya Hidup", count: "10%", color: "bg-rose-500" },
+                  { name: "Technology", count: "45%", color: "bg-blue-500" },
+                  { name: "Economy", count: "30%", color: "bg-emerald-500" },
+                  { name: "Politics", count: "15%", color: "bg-amber-500" },
+                  { name: "Lifestyle", count: "10%", color: "bg-rose-500" },
                 ].map((cat) => (
                   <div key={cat.name} className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
