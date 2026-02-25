@@ -91,14 +91,8 @@ export function AdminSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild className="hover:bg-transparent">
               <Link href="/dashboard" className="flex items-center gap-3">
-                <div className="flex aspect-square size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-md">
-                  <HiOutlineNewspaper className="size-5" />
-                </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-bold text-lg tracking-tight">NewsTest</span>
-                  <span className="text-[10px] uppercase font-semibold text-muted-foreground tracking-widest">
-                    v1.0.0
-                  </span>
+                  <span className="font-bold text-3xl tracking-tight">NewsTest.</span>
                 </div>
               </Link>
             </SidebarMenuButton>
