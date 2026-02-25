@@ -41,7 +41,7 @@ export function AdminHeader() {
   const breadcrumbs = getBreadcrumbs(pathname);
 
   return (
-    <Header sticky className="group-has-data-[collapsible=icon]/sidebar-wrapper:h-16">
+    <Header fixed className="group-has-data-[collapsible=icon]/sidebar-wrapper:h-16">
       <div className="flex items-center gap-2 flex-1">
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="mr-2 !h-4" />

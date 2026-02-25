@@ -85,8 +85,8 @@ export function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <Sidebar collapsible="icon" className="border-r">
-      <SidebarHeader className="h-16 flex items-center px-4 border-b">
+    <Sidebar collapsible="icon" className="border-none">
+      <SidebarHeader className="h-16 flex items-center px-4">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild className="hover:bg-transparent">
@@ -135,7 +135,7 @@ export function AdminSidebar() {
         ))}
       </SidebarContent>
 
-      <SidebarFooter className="p-4 border-t">
+      <SidebarFooter className="p-4">
         <div className="flex items-center justify-between group-data-[collapsible=icon]:hidden">
           <div className="flex flex-col gap-0.5 leading-none">
             <span className="text-sm font-semibold text-muted-foreground">© 2026 Newstest Admin</span>
