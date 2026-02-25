@@ -22,15 +22,17 @@ Layout.displayName = "Layout"
 
 interface HeaderProps extends React.HTMLAttributes<HTMLHeadElement> {
   sticky?: boolean
+  fixed?: boolean
 }
 
 const Header = React.forwardRef<HTMLElement, HeaderProps>(
-  ({ className, sticky, ...props }, ref) => (
+  ({ className, sticky, fixed, ...props }, ref) => (
     <header
       ref={ref}
       className={cn(
-        "flex h-16 items-center justify-between gap-4 border-b px-4 py-3 sm:gap-8 sm:px-8",
-        sticky && "sticky top-0 z-20 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        "flex h-16 items-center justify-between gap-4 px-4 py-3 sm:gap-8 sm:px-8",
+        sticky && "sticky top-0 z-20 bg-background/60 backdrop-blur-md",
+        fixed && "fixed top-0 right-0 left-0 md:left-[var(--sidebar-width)] z-20 bg-background/60 backdrop-blur-md transition-all duration-300 ease-in-out",
         className
       )}
       {...props}
@@ -44,7 +46,7 @@ const Body = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElemen
     <div
       ref={ref}
       className={cn(
-        "flex-1 overflow-auto py-6 px-4 sm:px-8",
+        "flex-1 py-6 px-4 sm:px-8",
         className
       )}
       {...props}
