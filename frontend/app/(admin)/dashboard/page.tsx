@@ -128,9 +128,6 @@ export default function DashboardPage() {
               Welcome back, here is your NewsTest performance overview for today.
             </p>
           </div>
-          <Button className="shadow-md">
-            <Plus className="mr-2 size-4" /> Create New Post
-          </Button>
         </div>
 
         {/* Stats Grid */}
