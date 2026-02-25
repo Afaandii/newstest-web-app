@@ -3,16 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard,
-  Users,
-  FileText,
-  FolderTree,
-  Settings,
-  Newspaper,
-  ChevronRight,
-  BarChart3,
-  HelpCircle,
-} from "lucide-react";
+  HiOutlineSquares2X2,
+  HiOutlineUsers,
+  HiOutlineDocumentText,
+  HiOutlineRectangleStack,
+  HiOutlineCog6Tooth,
+  HiOutlineNewspaper,
+  HiOutlineChartBar,
+  HiOutlineChatBubbleLeftRight,
+} from "react-icons/hi2";
 
 import {
   Sidebar,
@@ -27,35 +26,41 @@ import {
   SidebarFooter,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { FileText } from "lucide-react";
 
 const navGroups = [
   {
-    title: "Main",
+    title: "General",
     items: [
       {
         title: "Dashboard",
         href: "/dashboard",
-        icon: LayoutDashboard,
+        icon: HiOutlineSquares2X2,
       },
       {
         title: "Analytics",
         href: "/dashboard/analytics",
-        icon: BarChart3,
+        icon: HiOutlineChartBar,
       },
     ],
   },
   {
-    title: "Content",
+    title: "Master",
     items: [
       {
-        title: "All Posts",
+        title: "Categories",
+        href: "/dashboard/categories",
+        icon: HiOutlineRectangleStack,
+      },
+      {
+        title: "Posts",
         href: "/dashboard/posts",
         icon: FileText,
       },
       {
-        title: "Categories",
-        href: "/dashboard/categories",
-        icon: FolderTree,
+        title: "Comments",
+        href: "/dashboard/comments",
+        icon: HiOutlineChatBubbleLeftRight,
       },
     ],
   },
@@ -65,22 +70,12 @@ const navGroups = [
       {
         title: "Users",
         href: "/dashboard/users",
-        icon: Users,
+        icon: HiOutlineUsers,
       },
       {
         title: "Settings",
         href: "/dashboard/settings",
-        icon: Settings,
-      },
-    ],
-  },
-  {
-    title: "Other",
-    items: [
-      {
-        title: "Help Center",
-        href: "/dashboard/help",
-        icon: HelpCircle,
+        icon: HiOutlineCog6Tooth,
       },
     ],
   },
@@ -97,7 +92,7 @@ export function AdminSidebar() {
             <SidebarMenuButton size="lg" asChild className="hover:bg-transparent">
               <Link href="/dashboard" className="flex items-center gap-3">
                 <div className="flex aspect-square size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-md">
-                  <Newspaper className="size-5" />
+                  <HiOutlineNewspaper className="size-5" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-bold text-lg tracking-tight">NewsTest</span>
@@ -143,7 +138,7 @@ export function AdminSidebar() {
       <SidebarFooter className="p-4 border-t">
         <div className="flex items-center justify-between group-data-[collapsible=icon]:hidden">
           <div className="flex flex-col gap-0.5 leading-none">
-            <span className="text-sm font-semibold text-muted-foreground">© 2026 Admin</span>
+            <span className="text-sm font-semibold text-muted-foreground">© 2026 Newstest Admin</span>
           </div>
         </div>
       </SidebarFooter>
