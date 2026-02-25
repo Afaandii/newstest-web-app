@@ -65,28 +65,22 @@ export function AdminHeader() {
         </Breadcrumb>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
         {/* Search Mock */}
-        <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-md border bg-muted/50 text-muted-foreground transition-colors hover:bg-muted cursor-pointer shrink-0">
+        <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border/40 bg-muted/10 text-muted-foreground/70 transition-colors hover:bg-muted/20 cursor-pointer min-w-[280px]">
           <Search className="size-4" />
-          <span className="text-sm">Search...</span>
-          <kbd className="pointer-events-none ml-2 hidden h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+          <span className="text-sm">Search</span>
+          <div className="ml-auto flex items-center gap-1 rounded border border-border/40 bg-muted/20 px-1.5 py-0.5 font-mono text-[10px] font-medium text-muted-foreground">
             <span className="text-xs">⌘</span>K
-          </kbd>
+          </div>
         </div>
 
         <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon" className="h-9 w-9 relative">
-            <Bell className="size-5" />
-            <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-destructive border-2 border-background" />
-          </Button>
           <ThemeToggle />
         </div>
 
-        <Separator orientation="vertical" className="h-6 mx-1" />
-
         {/* User Menu */}
-        <DropdownMenu>
+        <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-9 px-2 gap-2 hover:bg-transparent">
               <Avatar className="h-8 w-8 shadow-sm">
@@ -95,10 +89,6 @@ export function AdminHeader() {
                   AF
                 </AvatarFallback>
               </Avatar>
-              <div className="flex flex-col items-start gap-0.5 text-left hidden sm:flex">
-                <span className="text-xs font-semibold">Admin Afandi</span>
-                <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Super Admin</span>
-              </div>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end" forceMount>
