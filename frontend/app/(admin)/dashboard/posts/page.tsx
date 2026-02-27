@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { 
@@ -25,48 +25,54 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Layout, Body } from "@/components/layout";
 
-// Dummy data
-const initialPosts = [
-  { 
-    id: "1", 
-    title: "Breaking: Latest AI Technology 2026", 
-    slug: "breaking-latest-ai-technology-2026",
-    category: "Technology",
-    author: "Admin Afandi",
-    date: "25 Feb 2026",
-    thumbnail: null // Placeholder
-  },
-  { 
-    id: "2", 
-    title: "Market Trends and Financial News", 
-    slug: "market-trends-and-financial-news",
-    category: "Economy",
-    author: "Editor",
-    date: "24 Feb 2026",
-    thumbnail: null
-  },
-  { 
-    id: "3", 
-    title: "Environment and Global Warming", 
-    slug: "environment-and-global-warming",
-    category: "Nature",
-    author: "Contributor",
-    date: "23 Feb 2026",
-    thumbnail: null
-  },
-];
-
 export default function PostsPage() {
-  const [posts, setPosts] = useState(initialPosts);
+  const [posts, setPosts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:8080/v1/posts");
+      const result = await response.json();
+      
+      if (result.status === "success") {
+        setPosts(result.data || []);
+      } else {
+        setError(result.error || "Failed to fetch posts");
+      }
+    } catch (err: any) {
+      setError(err.message || "An error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
   const filteredPosts = posts.filter((post) =>
-    post.title.toLowerCase().includes(searchQuery.toLowerCase())
+    post.title?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: number) => {
     if (confirm("Are you sure you want to delete this post?")) {
-      setPosts(posts.filter((post) => post.id !== id));
+      try {
+        const response = await fetch(`http://localhost:8080/v1/posts/${id}`, {
+          method: "DELETE",
+        });
+        const result = await response.json();
+        
+        if (response.ok) {
+          setPosts(posts.filter((post) => post.id_post !== id));
+        } else {
+          alert(result.errors || "Failed to delete post");
+        }
+      } catch (err: any) {
+        alert(err.message || "An error occurred");
+      }
     }
   };
 
@@ -120,9 +126,21 @@ export default function PostsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredPosts.length > 0 ? (
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                      Loading posts...
+                    </TableCell>
+                  </TableRow>
+                ) : error ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="h-24 text-center text-destructive">
+                      {error}
+                    </TableCell>
+                  </TableRow>
+                ) : filteredPosts.length > 0 ? (
                   filteredPosts.map((post) => (
-                    <TableRow key={post.id} className="group">
+                    <TableRow key={post.id_post} className="group">
                       <TableCell>
                         <div className="size-12 rounded-md bg-muted flex items-center justify-center overflow-hidden border">
                           {post.thumbnail ? (
@@ -146,19 +164,19 @@ export default function PostsPage() {
                       </TableCell>
                       <TableCell className="hidden md:table-cell">
                         <Badge variant="outline" className="font-medium bg-primary/5 text-primary border-primary/20">
-                          {post.category}
+                          {post.Category?.name || "Uncategorized"}
                         </Badge>
                       </TableCell>
                       <TableCell className="hidden lg:table-cell text-muted-foreground">
-                        {post.author}
+                        {post.User?.username || "Admin"}
                       </TableCell>
                       <TableCell className="hidden sm:table-cell text-muted-foreground text-sm">
-                        {post.date}
+                        {new Date(post.created_at).toLocaleDateString()}
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-2">
                           <Button variant="ghost" size="icon" asChild className="size-8">
-                            <Link href={`/dashboard/posts/update/${post.id}`}>
+                            <Link href={`/dashboard/posts/update/${post.id_post}`}>
                               <HiOutlinePencilSquare className="size-4" />
                             </Link>
                           </Button>
@@ -166,7 +184,7 @@ export default function PostsPage() {
                             variant="ghost" 
                             size="icon" 
                             className="size-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-                            onClick={() => handleDelete(post.id)}
+                            onClick={() => handleDelete(post.id_post)}
                           >
                             <HiOutlineTrash className="size-4" />
                           </Button>
