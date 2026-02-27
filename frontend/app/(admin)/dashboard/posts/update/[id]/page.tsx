@@ -1,6 +1,4 @@
-"use client";
-
-import { use } from "react";
+import { use, useEffect, useState } from "react";
 import { Body } from "@/components/layout";
 import { Layout } from "@/components/layout";
 import { PostForm } from "../../post-form";
@@ -8,37 +6,50 @@ import { HiOutlineChevronLeft } from "react-icons/hi2";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-// Dummy data for finding post
-const initialPosts = [
-  { 
-    id: "1", 
-    title: "Breaking: Latest AI Technology 2026", 
-    slug: "breaking-latest-ai-technology-2026",
-    category_id: "1",
-    excerpt: "This is a dummy excerpt for the AI post.",
-    content: "This is the full content for the latest AI technology news of 2026. Next.js and Tailwind are amazing.",
-  },
-  { 
-    id: "2", 
-    title: "Market Trends and Financial News", 
-    slug: "market-trends-and-financial-news",
-    category_id: "2",
-    excerpt: "Dummy excerpt for financial news.",
-    content: "Detailed market analysis for 2026 including crypto and stock updates.",
-  }
-];
-
 export default function UpdatePostPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  
-  const post = initialPosts.find((p) => p.id === id);
+  const [post, setPost] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!post) {
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`http://localhost:8080/v1/posts/${id}`);
+        const result = await response.json();
+        if (result.status === "success") {
+          setPost(result.data);
+        } else {
+          setError(result.error || "Post not found");
+        }
+      } catch (err: any) {
+        setError(err.message || "An error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPost();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <Layout>
+        <Body>
+          <div className="text-center py-20 text-muted-foreground">
+            Loading post data...
+          </div>
+        </Body>
+      </Layout>
+    );
+  }
+
+  if (error || !post) {
     return (
       <Layout>
         <Body>
           <div className="text-center py-20">
-            <h2 className="text-2xl font-bold">Post not found</h2>
+            <h2 className="text-2xl font-bold">{error || "Post not found"}</h2>
             <p className="text-muted-foreground mt-2">The article you are looking for does not exist.</p>
             <Button asChild className="mt-6">
               <Link href="/dashboard/posts">Back to Posts</Link>
@@ -69,13 +80,13 @@ export default function UpdatePostPage({ params }: { params: Promise<{ id: strin
 
         <div className="p-8 border rounded-xl bg-card shadow-sm">
           <PostForm 
-            id={post.id} 
+            id={post.id_post.toString()} 
             initialData={{
               title: post.title,
-              slug: post.slug,
-              category_id: post.category_id,
+              category_id: post.category_id.toString(),
               excerpt: post.excerpt,
               content: post.content,
+              thumbnail_url: post.thumbnail,
             }} 
           />
         </div>

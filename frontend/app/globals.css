@@ -121,8 +121,14 @@
     @apply border-border outline-ring/50;
   }
 
+  html {
+    scrollbar-gutter: stable !important;
+  }
+
   body {
     @apply bg-background text-foreground;
+    scrollbar-gutter: stable !important;
+    overflow-y: auto !important;
   }
 }
 

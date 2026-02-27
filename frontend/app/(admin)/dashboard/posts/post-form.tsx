@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -33,13 +33,8 @@ const postSchema = z.object({
   title: z.string().min(5, {
     message: "Title must be at least 5 characters.",
   }),
-  slug: z.string().min(5, {
-    message: "Slug must be at least 5 characters.",
-  }).regex(/^[a-z0-7-]+$/, {
-    message: "Slug must contain only lowercase letters, numbers, and hyphens.",
-  }),
   category_id: z.string({
-    required_error: "Please select a category.",
+    invalid_type_error: "Please select a category.",
   }),
   excerpt: z.string().min(10, {
     message: "Excerpt must be at least 10 characters.",
@@ -57,31 +52,74 @@ interface PostFormProps {
   id?: string;
 }
 
-// Dummy categories for the dropdown
-const categories = [
-  { id: "1", name: "Technology" },
-  { id: "2", name: "Economy" },
-  { id: "3", name: "Politics" },
-  { id: "4", name: "Lifestyle" },
-  { id: "5", name: "Sports" },
-];
-
 export function PostForm({ initialData, id }: PostFormProps) {
   const router = useRouter();
   const isEditing = !!id;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(initialData?.thumbnail_url || null);
+  const [fetchedCategories, setFetchedCategories] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/v1/category");
+        const result = await response.json();
+        if (result.status === "success" && Array.isArray(result.data)) {
+          setFetchedCategories(result.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch categories:", err);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const form = useForm<PostFormValues>({
     resolver: zodResolver(postSchema),
     defaultValues: initialData || {
       title: "",
-      slug: "",
       category_id: "",
       excerpt: "",
       content: "",
     },
   });
+
+  async function onSubmit(values: PostFormValues) {
+    try {
+      const formData = new FormData();
+      formData.append("user_id", "1"); // Hardcoded until auth is implemented
+      formData.append("category_id", values.category_id);
+      formData.append("title", values.title);
+      formData.append("excerpt", values.excerpt);
+      formData.append("content", values.content);
+      
+      if (values.thumbnail instanceof File) {
+        formData.append("thumbnail", values.thumbnail);
+      }
+
+      const url = isEditing 
+        ? `http://localhost:8080/v1/posts/${id}` 
+        : "http://localhost:8080/v1/posts";
+      
+      const method = isEditing ? "PUT" : "POST";
+      
+      const response = await fetch(url, {
+        method,
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(isEditing ? "Post updated successfully!" : "Post created successfully!");
+        router.push("/dashboard/posts");
+      } else {
+        alert(result.errors || "Failed to save post");
+      }
+    } catch (err: any) {
+      alert(err.message || "An error occurred");
+    }
+  }
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -96,12 +134,6 @@ export function PostForm({ initialData, id }: PostFormProps) {
     setPreviewUrl(null);
     form.setValue("thumbnail", undefined);
     if (fileInputRef.current) fileInputRef.current.value = "";
-  }
-
-  function onSubmit(values: PostFormValues) {
-    console.log(values);
-    alert(isEditing ? "Post updated successfully!" : "Post created successfully!");
-    router.push("/dashboard/posts");
   }
 
   return (
@@ -119,23 +151,6 @@ export function PostForm({ initialData, id }: PostFormProps) {
                   <FormControl>
                     <Input placeholder="Enter post title..." {...field} />
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="slug"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Slug</FormLabel>
-                  <FormControl>
-                    <Input placeholder="post-slug-format" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    The URL-friendly version of the title.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -188,13 +203,16 @@ export function PostForm({ initialData, id }: PostFormProps) {
                   <FormLabel>Category</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="h-12">
                         <SelectValue placeholder="Select a category" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {categories.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id}>
+                      {fetchedCategories.map((cat: any) => (
+                        <SelectItem 
+                          key={cat.id_category} 
+                          value={cat.id_category.toString()}
+                        >
                           {cat.name}
                         </SelectItem>
                       ))}
@@ -210,7 +228,7 @@ export function PostForm({ initialData, id }: PostFormProps) {
               <FormControl>
                 <div className="space-y-4">
                   <div 
-                    className="relative aspect-video rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50 flex items-center justify-center overflow-hidden transition-colors hover:bg-muted"
+                    className="relative aspect-video rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50 flex items-center justify-center overflow-hidden transition-colors hover:bg-muted cursor-pointer"
                     onClick={() => fileInputRef.current?.click()}
                   >
                     {previewUrl ? (
