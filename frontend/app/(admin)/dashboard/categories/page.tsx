@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { 
   HiOutlinePlus, 
@@ -22,26 +22,54 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Layout, Body, Header } from "@/components/layout";
 
-// Dummy data
-const initialCategories = [
-  { id: "1", name: "Technology", slug: "technology", description: "Latest gadgets and software updates.", count: 45 },
-  { id: "2", name: "Economy", slug: "economy", description: "Market trends and financial news.", count: 32 },
-  { id: "3", name: "Politics", slug: "politics", description: "Government and international relations.", count: 18 },
-  { id: "4", name: "Lifestyle", slug: "lifestyle", description: "Health, travel, and fashion.", count: 24 },
-  { id: "5", name: "Sports", slug: "sports", description: "Tournament results and athlete profiles.", count: 15 },
-];
-
 export default function CategoriesPage() {
-  const [categories, setCategories] = useState(initialCategories);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const fetchCategories = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:8080/v1/category");
+      const result = await response.json();
+      
+      if (result.status === "success") {
+        setCategories(result.data || []);
+      } else {
+        setError(result.error || "Failed to fetch categories");
+      }
+    } catch (err: any) {
+      setError(err.message || "An error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
   const filteredCategories = categories.filter((cat) =>
-    cat.name.toLowerCase().includes(searchQuery.toLowerCase())
+    cat.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: number) => {
     if (confirm("Are you sure you want to delete this category?")) {
-      setCategories(categories.filter((cat) => cat.id !== id));
+      try {
+        const response = await fetch(`http://localhost:8080/v1/category/${id}`, {
+          method: "DELETE",
+        });
+        const result = await response.json();
+        
+        if (response.ok) {
+          setCategories(categories.filter((cat) => cat.id_category !== id));
+        } else {
+          alert(result.errors || "Failed to delete category");
+        }
+      } catch (err: any) {
+        alert(err.message || "An error occurred");
+      }
     }
   };
 
@@ -94,25 +122,37 @@ export default function CategoriesPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredCategories.length > 0 ? (
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
+                      Loading categories...
+                    </TableCell>
+                  </TableRow>
+                ) : error ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="h-24 text-center text-destructive">
+                      {error}
+                    </TableCell>
+                  </TableRow>
+                ) : filteredCategories.length > 0 ? (
                   filteredCategories.map((category) => (
-                    <TableRow key={category.id} className="group">
+                    <TableRow key={category.id_category} className="group">
                       <TableCell className="font-semibold">
                         {category.name}
                       </TableCell>
                       <TableCell className="font-mono text-sm">
-                        {category.slug}
+                        {category.name.toLowerCase().replace(/ /g, "-")}
                       </TableCell>
                       <TableCell className="hidden md:table-cell text-muted-foreground max-w-[300px] truncate">
                         {category.description}
                       </TableCell>
                       <TableCell className="text-right font-medium">
-                        {category.count}
+                        {category.Post?.length || 0}
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-2">
                           <Button variant="ghost" size="icon" asChild className="size-8">
-                            <Link href={`/dashboard/categories/update/${category.id}`}>
+                            <Link href={`/dashboard/categories/update/${category.id_category}`}>
                               <HiOutlinePencilSquare className="size-4" />
                             </Link>
                           </Button>
@@ -120,7 +160,7 @@ export default function CategoriesPage() {
                             variant="ghost" 
                             size="icon" 
                             className="size-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-                            onClick={() => handleDelete(category.id)}
+                            onClick={() => handleDelete(category.id_category)}
                           >
                             <HiOutlineTrash className="size-4" />
                           </Button>

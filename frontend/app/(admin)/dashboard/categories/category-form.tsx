@@ -23,11 +23,6 @@ const categorySchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  slug: z.string().min(2, {
-    message: "Slug must be at least 2 characters.",
-  }).regex(/^[a-z0-7-]+$/, {
-    message: "Slug must contain only lowercase letters, numbers, and hyphens.",
-  }),
   description: z.string().optional(),
 });
 
@@ -46,16 +41,40 @@ export function CategoryForm({ initialData, id }: CategoryFormProps) {
     resolver: zodResolver(categorySchema),
     defaultValues: initialData || {
       name: "",
-      slug: "",
       description: "",
     },
   });
 
-  function onSubmit(values: CategoryFormValues) {
-    // In a real app, you would send this to your API
-    console.log(values);
-    alert(isEditing ? "Category updated successfully!" : "Category created successfully!");
-    router.push("/dashboard/categories");
+  async function onSubmit(values: CategoryFormValues) {
+    try {
+      const url = isEditing 
+        ? `http://localhost:8080/v1/category/${id}` 
+        : "http://localhost:8080/v1/category";
+      
+      const method = isEditing ? "PUT" : "POST";
+      
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: values.name,
+          description: values.description,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(isEditing ? "Category updated successfully!" : "Category created successfully!");
+        router.push("/dashboard/categories");
+      } else {
+        alert(result.errors || "Failed to save category");
+      }
+    } catch (err: any) {
+      alert(err.message || "An error occurred");
+    }
   }
 
   return (
@@ -73,23 +92,6 @@ export function CategoryForm({ initialData, id }: CategoryFormProps) {
                 </FormControl>
                 <FormDescription>
                   This is the public display name for the category.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="slug"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Slug</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g. technology" {...field} />
-                </FormControl>
-                <FormDescription>
-                  The unique URL-friendly version of the name.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react";
+import { useEffect, useState, use } from "react";
 import { Body } from "@/components/layout";
 import { Layout } from "@/components/layout";
 import { CategoryForm } from "../../category-form";
@@ -8,26 +8,50 @@ import { HiOutlineChevronLeft } from "react-icons/hi2";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-// Dummy data for finding category
-const initialCategories = [
-  { id: "1", name: "Technology", slug: "technology", description: "Latest gadgets and software updates." },
-  { id: "2", name: "Economy", slug: "economy", description: "Market trends and financial news." },
-  { id: "3", name: "Politics", slug: "politics", description: "Government and international relations." },
-  { id: "4", name: "Lifestyle", slug: "lifestyle", description: "Health, travel, and fashion." },
-  { id: "5", name: "Sports", slug: "sports", description: "Tournament results and athlete profiles." },
-];
-
 export default function EditCategoryPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  
-  const category = initialCategories.find((cat) => cat.id === id);
+  const [category, setCategory] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!category) {
+  useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`http://localhost:8080/v1/category/${id}`);
+        const result = await response.json();
+        
+        if (result.status === "succees") { // Note: Backend has typo "succees"
+          setCategory(result.data);
+        } else {
+          setError(result.error || "Category not found");
+        }
+      } catch (err: any) {
+        setError(err.message || "An error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategory();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <Layout>
+        <Body>
+          <div className="text-center py-20 text-muted-foreground">Loading category...</div>
+        </Body>
+      </Layout>
+    );
+  }
+
+  if (error || !category) {
     return (
       <Layout>
         <Body>
           <div className="text-center py-20">
-            <h2 className="text-2xl font-bold">Category not found</h2>
+            <h2 className="text-2xl font-bold">{error || "Category not found"}</h2>
             <p className="text-muted-foreground mt-2">The category you are looking for does not exist.</p>
             <Button asChild className="mt-6">
               <Link href="/dashboard/categories">Back to Categories</Link>
@@ -58,10 +82,10 @@ export default function EditCategoryPage({ params }: { params: Promise<{ id: str
 
         <div className="p-6 border rounded-lg bg-card shadow-sm">
           <CategoryForm 
-            id={category.id} 
+            id={String(category.id_category)} 
             initialData={{
               name: category.name,
-              slug: category.slug,
+              slug: category.name.toLowerCase().replace(/ /g, "-"),
               description: category.description || "",
             }} 
           />
