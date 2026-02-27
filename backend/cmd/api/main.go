@@ -11,6 +11,8 @@ import (
 	"newstest-app/internal/role"
 	"newstest-app/internal/user"
 
+	"newstest-app/pkg/middleware"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,6 +25,9 @@ func main() {
 
 	bootstrap.AutoMigrate(db)
 	r := gin.Default()
+
+	r.Use(middleware.CORSMiddleware())
+
 	category.RegisterRoutesCategory(r, db)
 	role.RegisterRoutesRole(r, db)
 	permissions.RegisterRoutesPermissions(r, db)

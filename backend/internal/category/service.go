@@ -1,6 +1,10 @@
 package category
 
-import "newstest-app/internal/shared/model"
+import (
+	"newstest-app/internal/shared/model"
+
+	"github.com/gosimple/slug"
+)
 
 type Service interface {
 	GetAll() ([]model.Category, error)
@@ -10,25 +14,27 @@ type Service interface {
 	Delete(id uint) error
 }
 
-type service struct{
+type service struct {
 	repo CategoryRepository
 }
 
-func NewServiceCategory(repo CategoryRepository) Service{
+func NewServiceCategory(repo CategoryRepository) Service {
 	return &service{repo}
 }
 
-func (s *service) GetAll() ([]model.Category, error){
+func (s *service) GetAll() ([]model.Category, error) {
 	return s.repo.FindAll()
 }
 
-func (s *service) GetByID(id uint) (*model.Category, error){
+func (s *service) GetByID(id uint) (*model.Category, error) {
 	return s.repo.FindByID(id)
 }
 
-func (s *service) Create(name, description string) (*model.Category, error){
+func (s *service) Create(name, description string) (*model.Category, error) {
+	slugged := slug.Make(name)
 	c := &model.Category{
-		Name: name,
+		Name:        name,
+		Slug:        slugged,
 		Description: description,
 	}
 
@@ -36,18 +42,20 @@ func (s *service) Create(name, description string) (*model.Category, error){
 	return c, err
 }
 
-func (s *service) Update(id uint, name, description string) (*model.Category, error){
+func (s *service) Update(id uint, name, description string) (*model.Category, error) {
 	c, err := s.repo.FindByID(id)
 	if err != nil {
 		return nil, err
 	}
+	slugged := slug.Make(name)
 
 	c.Name = name
+	c.Slug = slugged
 	c.Description = description
 	err = s.repo.Update(c)
 	return c, err
 }
 
-func (s *service) Delete(id uint) error{
+func (s *service) Delete(id uint) error {
 	return s.repo.Delete(id)
 }
