@@ -23,6 +23,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
+import { Checkbox } from "@/components/ui/checkbox";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+
 const loginSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email address.",
@@ -30,11 +34,13 @@ const loginSchema = z.object({
   password: z.string().min(8, {
     message: "Password must be at least 8 characters.",
   }),
+  remember: z.boolean().default(false).optional(),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -43,16 +49,43 @@ export default function LoginPage() {
     defaultValues: {
       email: "",
       password: "",
+      remember: false,
     },
   });
 
   async function onSubmit(values: LoginFormValues) {
-    setIsLoading(true);
-    console.log(values);
-    setTimeout(() => {
+    try {
+      setIsLoading(true);
+      const response = await fetch("http://localhost:8080/v1/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: values.email,
+          password: values.password,
+          remember: values.remember,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Save token to cookies
+        // If remember is true, set cookie to expire in 7 days, otherwise session cookie
+        const cookieOptions = values.remember ? { expires: 7 } : {};
+        Cookies.set("token", result.token, cookieOptions);
+        
+        // Redirect to dashboard
+        router.push("/dashboard");
+      } else {
+        alert(result.errors || "Login failed. Please check your credentials.");
+      }
+    } catch (err: any) {
+      alert(err.message || "An error occurred during login.");
+    } finally {
       setIsLoading(false);
-      alert("Login simulation: Check console for data");
-    }, 1500);
+    }
   }
 
   return (
@@ -126,6 +159,27 @@ export default function LoginPage() {
                     </div>
                   </FormControl>
                   <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="remember"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      className="border-white/20 data-[state=checked]:bg-white data-[state=checked]:text-[#020817]"
+                    />
+                  </FormControl>
+                  <div className="leading-none">
+                    <FormLabel className="text-xs font-medium text-slate-300">
+                      Remember tokens?
+                    </FormLabel>
+                  </div>
                 </FormItem>
               )}
             />
