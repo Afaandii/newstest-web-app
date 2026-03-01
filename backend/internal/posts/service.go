@@ -1,6 +1,10 @@
 package posts
 
-import "newstest-app/internal/shared/model"
+import (
+	"newstest-app/internal/shared/model"
+
+	"github.com/gosimple/slug"
+)
 
 type PostRequest struct {
 	UserID     uint   `form:"user_id"`
@@ -37,11 +41,12 @@ func (s *service) GetByID(id uint) (*model.Post, error) {
 }
 
 func (s *service) Create(req PostRequest) (*model.Post, error) {
+	slugged := slug.Make(req.Title)
 	p := &model.Post{
 		UserRef:     req.UserID,
 		CategoryRef: req.CategoryID,
 		Title:       req.Title,
-		Slug:        req.Slug,
+		Slug:        slugged,
 		Excerpt:     req.Excerpt,
 		Content:     req.Content,
 		Thumbnail:   req.Thumbnail,
@@ -57,14 +62,15 @@ func (s *service) Update(id uint, req PostRequest, hasNewThumbnail bool) (*model
 		return nil, err
 	}
 
+	slugged := slug.Make(req.Title)
+
 	p.UserRef = req.UserID
 	p.CategoryRef = req.CategoryID
 	p.Title = req.Title
-	p.Slug = req.Slug
+	p.Slug = slugged
 	p.Excerpt = req.Excerpt
 	p.Content = req.Content
 
-	// Only overwrite thumbnail if a new file was actually uploaded
 	if hasNewThumbnail {
 		p.Thumbnail = req.Thumbnail
 	}
