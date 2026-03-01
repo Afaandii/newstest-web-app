@@ -65,12 +65,10 @@ func (s *service) Update(id uint, role_id uint, name, email, password, nip, addr
 	u.Nip = nip
 	u.Address = address
 
-	// Only update avatar if a new file was actually uploaded
 	if hasNewAvatar {
 		u.Avatar = avatar
 	}
 
-	// Only re-hash password if a new one was provided
 	if password != "" {
 		hashed, err := security.HashPassword(password)
 		if err != nil {

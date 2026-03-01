@@ -82,7 +82,6 @@ func (h *Handler) Create(u *gin.Context) {
 		}
 		avatarURL = url
 	}
-	// If err != nil (e.g. http.ErrMissingFile), avatar stays ""
 
 	usrs, err := h.service.Create(
 		uint(roleID),

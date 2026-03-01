@@ -127,6 +127,10 @@
 
   body {
     @apply bg-background text-foreground;
+    /* Overrides for Radix UI / Shadcn Select Scroll Lock */
+    padding-right: 0 !important;
+    overflow: auto !important;
+    pointer-events: auto !important;
   }
 }
 
