@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -12,54 +13,78 @@ import {
 import { FaGithub, FaFacebookF } from "react-icons/fa";
 
 import { Button } from "@/components/ui/button";
-import {
+import { 
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 const registerSchema = z.object({
+  name: z.string().min(3, {
+    message: "Name must be at least 3 characters.",
+  }),
   email: z.string().email({
     message: "Please enter a valid email address.",
   }),
   password: z.string().min(8, {
     message: "Password must be at least 8 characters.",
   }),
-  confirmPassword: z.string().min(8, {
-    message: "Password must be at least 8 characters.",
+  nip: z.string().min(10, {
+    message: "NIP must be at least 10 characters.",
   }),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match.",
-  path: ["confirmPassword"],
+  address: z.string().min(5, {
+    message: "Address must be at least 5 characters.",
+  }),
 });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
-      confirmPassword: "",
+      nip: "",
+      address: "",
     },
   });
 
   async function onSubmit(values: RegisterFormValues) {
-    setIsLoading(true);
-    console.log(values);
-    setTimeout(() => {
+    try {
+      setIsLoading(true);
+      const response = await fetch("http://localhost:8080/v1/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert("Account created successfully! Please sign in.");
+        router.push("/login");
+      } else {
+        alert(result.errors || "Failed to register. Please try again.");
+      }
+    } catch (err: any) {
+      alert(err.message || "An error occurred during registration.");
+    } finally {
       setIsLoading(false);
-      alert("Register simulation: Check console for data");
-    }, 1500);
+    }
   }
 
   return (
@@ -70,7 +95,7 @@ export default function RegisterPage() {
       </div>
 
       {/* Register Card */}
-      <div className="w-full max-w-[450px] rounded-[12px] border border-white/5 bg-[#020817] p-8 shadow-2xl mb-8">
+      <div className="w-full max-w-[500px] rounded-[12px] border border-white/5 bg-[#020817] p-8 shadow-2xl mb-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-2xl text-center font-bold tracking-tight">Sign Up</h1>
@@ -81,10 +106,28 @@ export default function RegisterPage() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             <FormField
               control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-xs font-bold uppercase tracking-wider text-slate-200">Full Name</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="John Doe" 
+                      {...field} 
+                      className="bg-[#020817] border-white/10 h-10 focus-visible:ring-1 focus-visible:ring-white/20"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem className="space-y-2">
-                  <FormLabel className="text-xs font-bold uppercase tracking-wider text-slate-200">Email</FormLabel>
+                  <FormLabel className="text-xs font-bold uppercase tracking-wider text-slate-200">Email Address</FormLabel>
                   <FormControl>
                     <Input 
                       placeholder="name@example.com" 
@@ -131,30 +174,35 @@ export default function RegisterPage() {
 
             <FormField
               control={form.control}
-              name="confirmPassword"
+              name="nip"
               render={({ field }) => (
                 <FormItem className="space-y-2">
-                  <FormLabel className="text-xs font-bold uppercase tracking-wider text-slate-200">Confirm Password</FormLabel>
+                  <FormLabel className="text-xs font-bold uppercase tracking-wider text-slate-200">NIP</FormLabel>
                   <FormControl>
-                    <div className="relative">
-                      <Input 
-                        type={showConfirmPassword ? "text" : "password"} 
-                        placeholder="********" 
-                        className="pr-10 bg-[#020817] border-white/10 h-10 focus-visible:ring-1 focus-visible:ring-white/20"
-                        {...field} 
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors"
-                      >
-                        {showConfirmPassword ? (
-                          <HiOutlineEyeSlash className="size-4" />
-                        ) : (
-                          <HiOutlineEye className="size-4" />
-                        )}
-                      </button>
-                    </div>
+                    <Input 
+                      placeholder="1234567890" 
+                      {...field} 
+                      className="bg-[#020817] border-white/10 h-10 focus-visible:ring-1 focus-visible:ring-white/20"
+                    />
+                  </FormControl>
+                  <FormDescription className="text-[10px] text-slate-500">Employee Identification Number.</FormDescription>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-xs font-bold uppercase tracking-wider text-slate-200">Address</FormLabel>
+                  <FormControl>
+                    <Textarea 
+                      placeholder="Enter your residence address" 
+                      {...field} 
+                      className="bg-[#020817] border-white/10 min-h-[80px] focus-visible:ring-1 focus-visible:ring-white/20"
+                    />
                   </FormControl>
                   <FormMessage className="text-xs" />
                 </FormItem>
@@ -163,7 +211,7 @@ export default function RegisterPage() {
 
             <Button 
               type="submit" 
-              className="w-full bg-slate-100 text-[#020817] hover:bg-slate-200 h-10 font-bold tracking-tight rounded-[6px] cursor-pointer"
+              className="w-full bg-slate-100 text-[#020817] hover:bg-slate-200 h-10 font-bold tracking-tight rounded-[6px] cursor-pointer pt-0"
               disabled={isLoading}
             >
               {isLoading ? (
