@@ -66,27 +66,14 @@ export default function RegisterPage() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#020617] text-white p-4 overflow-y-auto [scrollbar-gutter:stable] scrollbar-custom">
       {/* Brand Header */}
       <div className="flex items-center gap-2 mb-6 pt-8">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-6">
-          <path d="M18.3 5.71a2.83 2.83 0 0 0-4 0L12 8l-2.3-2.29a2.83 2.83 0 0 0-4 4L12 16l6.3-6.29a2.83 2.83 0 0 0 0-4Z" />
-          <path d="M15.54 8.46 5.71 18.29" />
-          <path d="m8.46 15.54 9.83-9.83" />
-        </svg>
-        <span className="text-xl font-bold tracking-tight">Shadcn Admin</span>
+        <span className="text-xl font-bold tracking-tight">NewsTest Register</span>
       </div>
 
       {/* Register Card */}
-      <div className="w-full max-w-[400px] rounded-[12px] border border-white/5 bg-[#020817] p-8 shadow-2xl mb-8">
+      <div className="w-full max-w-[450px] rounded-[12px] border border-white/5 bg-[#020817] p-8 shadow-2xl mb-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold tracking-tight">Create an account</h1>
-          <p className="text-sm text-slate-400 mt-2 leading-relaxed">
-            Enter your email and password to create an account.
-            <br />
-            Already have an account?{" "}
-            <Link href="/login" className="text-white underline underline-offset-4 hover:text-slate-200 transition-colors">
-              Sign In
-            </Link>
-          </p>
+          <h1 className="text-2xl text-center font-bold tracking-tight">Sign Up</h1>
         </div>
 
         {/* Form */}
@@ -176,7 +163,7 @@ export default function RegisterPage() {
 
             <Button 
               type="submit" 
-              className="w-full bg-slate-100 text-[#020817] hover:bg-slate-200 h-10 font-bold tracking-tight rounded-[6px]"
+              className="w-full bg-slate-100 text-[#020817] hover:bg-slate-200 h-10 font-bold tracking-tight rounded-[6px] cursor-pointer"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -202,11 +189,11 @@ export default function RegisterPage() {
 
         {/* Social Buttons */}
         <div className="grid grid-cols-2 gap-4">
-          <Button variant="outline" className="w-full bg-transparent border-white/10 hover:bg-white/5 h-10 text-xs font-semibold rounded-[6px]">
+          <Button variant="outline" className="w-full cursor-pointer bg-transparent border-white/10 hover:bg-white/5 h-10 text-xs font-semibold rounded-[6px]">
             <FaGithub className="mr-2 size-4" />
             GitHub
           </Button>
-          <Button variant="outline" className="w-full bg-transparent border-white/10 hover:bg-white/5 h-10 text-xs font-semibold rounded-[6px]">
+          <Button variant="outline" className="w-full cursor-pointer bg-transparent border-white/10 hover:bg-white/5 h-10 text-xs font-semibold rounded-[6px]">
             <FaFacebookF className="mr-2 size-3.5" />
             Facebook
           </Button>

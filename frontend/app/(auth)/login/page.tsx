@@ -132,7 +132,7 @@ export default function LoginPage() {
 
             <Button 
               type="submit" 
-              className="w-full bg-slate-100 text-[#020817] hover:bg-slate-200 h-10 font-bold tracking-tight rounded-[6px]"
+              className="w-full bg-slate-100 text-[#020817] hover:bg-slate-200 h-10 font-bold tracking-tight rounded-[6px] cursor-pointer"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -161,11 +161,11 @@ export default function LoginPage() {
 
         {/* Social Buttons */}
         <div className="grid grid-cols-2 gap-4">
-          <Button variant="outline" className="w-full bg-transparent border-white/10 hover:bg-white/5 h-10 text-xs font-semibold rounded-[6px]">
+          <Button variant="outline" className="w-full bg-transparent border-white/10 hover:bg-white/5 h-10 text-xs font-semibold rounded-[6px] cursor-pointer">
             <FaGithub className="mr-2 size-4" />
             GitHub
           </Button>
-          <Button variant="outline" className="w-full bg-transparent border-white/10 hover:bg-white/5 h-10 text-xs font-semibold rounded-[6px]">
+          <Button variant="outline" className="w-full bg-transparent border-white/10 hover:bg-white/5 h-10 text-xs font-semibold rounded-[6px] cursor-pointer">
             <FaFacebookF className="mr-2 size-3.5" />
             Facebook
           </Button>
