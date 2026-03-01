@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -58,18 +58,31 @@ interface UserFormProps {
   id?: string;
 }
 
-const roles = [
-  { id: "1", name: "Super Admin" },
-  { id: "2", name: "Admin" },
-  { id: "3", name: "Editor" },
-  { id: "4", name: "Writer" },
-];
+// Roles will be fetched dynamically
 
 export function UserForm({ initialData, id }: UserFormProps) {
   const router = useRouter();
   const isEditing = !!id;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(initialData?.avatar_url || null);
+  const [roles, setRoles] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/v1/roles");
+        const result = await response.json();
+        if (result.status === "success") {
+          setRoles(result.data || []);
+        } else if (response.ok && result.datas) {
+          setRoles(result.datas || []);
+        } 
+      } catch (err) {
+        console.error("Failed to fetch roles:", err);
+      }
+    };
+    fetchRoles();
+  }, []);
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(userSchema),
@@ -98,10 +111,44 @@ export function UserForm({ initialData, id }: UserFormProps) {
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
-  function onSubmit(values: UserFormValues) {
-    console.log(values);
-    alert(isEditing ? "User updated successfully!" : "User created successfully!");
-    router.push("/dashboard/users");
+  async function onSubmit(values: UserFormValues) {
+    try {
+      const url = isEditing 
+        ? `http://localhost:8080/v1/users/${id}` 
+        : "http://localhost:8080/v1/users";
+      
+      const method = isEditing ? "PUT" : "POST";
+      
+      const formData = new FormData();
+      formData.append("name", values.nama);
+      formData.append("email", values.email);
+      if (values.password) {
+        formData.append("password", values.password);
+      }
+      formData.append("nip", values.nip);
+      formData.append("address", values.address);
+      formData.append("role_id", values.role_id);
+      
+      if (values.avatar instanceof File) {
+        formData.append("avatar", values.avatar);
+      }
+
+      const response = await fetch(url, {
+        method,
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(isEditing ? "User updated successfully!" : "User created successfully!");
+        router.push("/dashboard/users");
+      } else {
+        alert(result.errors || "Failed to save user");
+      }
+    } catch (err: any) {
+      alert(err.message || "An error occurred");
+    }
   }
 
   return (
@@ -212,7 +259,7 @@ export function UserForm({ initialData, id }: UserFormProps) {
                   </FormControl>
                   <SelectContent>
                     {roles.map((role) => (
-                      <SelectItem key={role.id} value={role.id}>
+                      <SelectItem key={role.id_role || role.id} value={String(role.id_role || role.id)}>
                         {role.name}
                       </SelectItem>
                     ))}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { 
@@ -25,46 +25,55 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Layout, Body } from "@/components/layout";
 
-// Dummy data
-const initialUsers = [
-  { 
-    id: "1", 
-    nama: "Admin Afandi", 
-    email: "admin@newstest.com",
-    role: "Super Admin",
-    nip: "199001012015011001",
-    avatar: null
-  },
-  { 
-    id: "2", 
-    nama: "Jane Doe", 
-    email: "jane@newstest.com",
-    role: "Editor",
-    nip: "199205122018022002",
-    avatar: null
-  },
-  { 
-    id: "3", 
-    nama: "Bob Smith", 
-    email: "bob@newstest.com",
-    role: "Writer",
-    nip: "199510202020031003",
-    avatar: null
-  },
-];
-
 export default function UsersPage() {
-  const [users, setUsers] = useState(initialUsers);
+  const [users, setUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:8080/v1/users");
+      const result = await response.json();
+      
+      if (response.ok) {
+        setUsers(result.datas || []);
+      } else {
+        setError(result.errors || "Failed to fetch users");
+      }
+    } catch (err: any) {
+      setError(err.message || "An error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   const filteredUsers = users.filter((user) =>
-    user.nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchQuery.toLowerCase())
+    user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.email?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: number) => {
     if (confirm("Are you sure you want to delete this user?")) {
-      setUsers(users.filter((user) => user.id !== id));
+      try {
+        const response = await fetch(`http://localhost:8080/v1/users/${id}`, {
+          method: "DELETE",
+        });
+        const result = await response.json();
+        
+        if (response.ok) {
+          setUsers(users.filter((user) => user.id !== id));
+        } else {
+          alert(result.errors || "Failed to delete user");
+        }
+      } catch (err: any) {
+        alert(err.message || "An error occurred");
+      }
     }
   };
 
@@ -118,7 +127,19 @@ export default function UsersPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredUsers.length > 0 ? (
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                      Loading users...
+                    </TableCell>
+                  </TableRow>
+                ) : error ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="h-24 text-center text-destructive">
+                      {error}
+                    </TableCell>
+                  </TableRow>
+                ) : filteredUsers.length > 0 ? (
                   filteredUsers.map((user) => (
                     <TableRow key={user.id} className="group">
                       <TableCell>
@@ -126,19 +147,19 @@ export default function UsersPage() {
                           {user.avatar ? (
                              <Image 
                                src={user.avatar} 
-                               alt={user.nama} 
+                               alt={user.name} 
                                width={40} 
                                height={40} 
                                className="object-cover size-full"
                              />
                           ) : (
-                            <HiOutlineUser className="size-5 text-muted-foreground/50" />
+                             <HiOutlineUser className="size-5 text-muted-foreground/50" />
                           )}
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-col">
-                          <span className="font-semibold">{user.nama}</span>
+                          <span className="font-semibold">{user.name}</span>
                           <span className="text-xs text-muted-foreground md:hidden">{user.email}</span>
                         </div>
                       </TableCell>
@@ -150,7 +171,7 @@ export default function UsersPage() {
                       </TableCell>
                       <TableCell>
                         <Badge variant="secondary" className="font-medium">
-                          {user.role}
+                          {user.Role?.name || "Unknown Role"}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
