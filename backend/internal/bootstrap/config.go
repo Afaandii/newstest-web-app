@@ -18,6 +18,7 @@ type Config struct {
 	SupabaseKey             string
 	SupabaseBucketAvatar    string
 	SupabaseBucketThumbnail string
+	JWTSecret               string
 }
 
 func LoadConfig() *Config {
@@ -36,5 +37,6 @@ func LoadConfig() *Config {
 		SupabaseKey:             os.Getenv("SUPABASE_KEY"),
 		SupabaseBucketAvatar:    os.Getenv("SUPABASE_BUCKET_AVATARS"),
 		SupabaseBucketThumbnail: os.Getenv("SUPABASE_BUCKET_THUMBNAILS"),
+		JWTSecret:               os.Getenv("JWT_SECRET"),
 	}
 }

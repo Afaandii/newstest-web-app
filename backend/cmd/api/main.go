@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"newstest-app/internal/auth"
 	"newstest-app/internal/bootstrap"
 	"newstest-app/internal/category"
 	"newstest-app/internal/permissions"
@@ -33,6 +34,7 @@ func main() {
 	permissions.RegisterRoutesPermissions(r, db)
 	posts.RegisterRoutesPosts(r, db, cfg)
 	user.RegisterRouteUser(r, db, cfg)
+	auth.RegisterRoutesAuth(r, db, cfg)
 
 	if cfg.PORT == "" {
 		cfg.PORT = "8080"
