@@ -156,7 +156,7 @@ export default function LoginPage() {
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors"
+                        className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors"
                       >
                         {showPassword ? (
                           <HiOutlineEyeSlash className="size-4" />
@@ -180,7 +180,7 @@ export default function LoginPage() {
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                      className="border-white/20 data-[state=checked]:bg-white data-[state=checked]:text-[#020817]"
+                      className="border-white/20 cursor-pointer data-[state=checked]:bg-white data-[state=checked]:text-[#020817]"
                     />
                   </FormControl>
                   <div className="leading-none">
