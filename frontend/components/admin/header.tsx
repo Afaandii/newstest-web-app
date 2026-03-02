@@ -25,6 +25,7 @@ import { usePathname } from "next/navigation";
 import { LogOut, User, Settings, Bell, Search } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Header } from "@/components/layout";
+import { CommandMenu } from "./command-menu";
 
 function getBreadcrumbs(pathname: string) {
   const segments = pathname.split("/").filter(Boolean);
@@ -37,6 +38,7 @@ function getBreadcrumbs(pathname: string) {
 }
 
 export function AdminHeader() {
+  const [open, setOpen] = React.useState(false);
   const pathname = usePathname();
   const breadcrumbs = getBreadcrumbs(pathname);
 
@@ -67,13 +69,18 @@ export function AdminHeader() {
 
       <div className="flex items-center gap-2">
         {/* Search Mock */}
-        <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border/40 bg-muted/10 text-muted-foreground/70 transition-colors hover:bg-muted/20 cursor-pointer min-w-[280px]">
+        <div 
+          onClick={() => setOpen(true)}
+          className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border/40 bg-muted/10 text-muted-foreground/70 transition-colors hover:bg-muted/20 cursor-pointer min-w-[280px]"
+        >
           <Search className="size-4" />
           <span className="text-sm">Search</span>
           <div className="ml-auto flex items-center gap-1 rounded border border-border/40 bg-muted/20 px-1.5 py-0.5 font-mono text-[10px] font-medium text-muted-foreground">
             <span className="text-xs">⌘</span>K
           </div>
         </div>
+
+        <CommandMenu open={open} setOpen={setOpen} />
 
         <div className="flex items-center gap-1">
           <ThemeToggle />
@@ -110,7 +117,7 @@ export function AdminHeader() {
               <span>Settings</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive focus:bg-destructive/10 focus:text-destructive">
+            <DropdownMenuItem className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer">
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>
             </DropdownMenuItem>

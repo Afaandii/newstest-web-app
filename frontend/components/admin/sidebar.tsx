@@ -28,64 +28,8 @@ import {
 } from "@/components/ui/sidebar";
 import { FileText } from "lucide-react";
 import { FaUserTie } from "react-icons/fa6";
+import { navGroups } from "@/lib/nav";
 
-const navGroups = [
-  {
-    title: "General",
-    items: [
-      {
-        title: "Dashboard",
-        href: "/dashboard",
-        icon: HiOutlineSquares2X2,
-      },
-      {
-        title: "Analytics",
-        href: "/dashboard",
-        icon: HiOutlineChartBar,
-      },
-    ],
-  },
-  {
-    title: "Master",
-    items: [
-      {
-        title: "Categories",
-        href: "/dashboard/categories",
-        icon: HiOutlineRectangleStack,
-      },
-      {
-        title: "Posts",
-        href: "/dashboard/posts",
-        icon: FileText,
-      },
-      {
-        title: "Comments",
-        href: "/dashboard/comments",
-        icon: HiOutlineChatBubbleLeftRight,
-      },
-    ],
-  },
-  {
-    title: "Management",
-    items: [
-      {
-        title: "Users",
-        href: "/dashboard/users",
-        icon: HiOutlineUsers,
-      },
-      {
-        title: "Roles",
-        href: "/dashboard/roles",
-        icon: FaUserTie,
-      },
-      {
-        title: "Settings",
-        href: "/dashboard",
-        icon: HiOutlineCog6Tooth,
-      },
-    ],
-  },
-];
 
 export function AdminSidebar() {
   const pathname = usePathname();
