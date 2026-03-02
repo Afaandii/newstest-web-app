@@ -44,6 +44,7 @@ func (h *Handler) Login(c *gin.Context) {
 	var req struct {
 		Email    string `json:"email" binding:"required,email"`
 		Password string `json:"password" binding:"required"`
+		Remember bool   `json:"remember"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -51,7 +52,7 @@ func (h *Handler) Login(c *gin.Context) {
 		return
 	}
 
-	token, err := h.service.Login(req.Email, req.Password)
+	token, roleID, name, err := h.service.Login(req.Email, req.Password, req.Remember)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"errors": err.Error()})
 		return
@@ -60,5 +61,7 @@ func (h *Handler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Login successful!",
 		"token":   token,
+		"role_id": roleID,
+		"name":    name,
 	})
 }

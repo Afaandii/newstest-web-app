@@ -10,7 +10,7 @@ import (
 
 type Service interface {
 	Register(name, email, password, nip, address string) (*model.User, error)
-	Login(email, password string) (string, error)
+	Login(email, password string, remember bool) (string, uint, string, error)
 }
 
 type service struct {
@@ -45,26 +45,26 @@ func (s *service) Register(name, email, password, nip, address string) (*model.U
 	return user, nil
 }
 
-func (s *service) Login(email, password string) (string, error) {
+func (s *service) Login(email, password string, remember bool) (string, uint, string, error) {
 	user, err := s.repo.FindByEmail(email)
 	if err != nil {
-		return "", errors.New("invalid email or password")
+		return "", 0, "", errors.New("invalid email or password")
 	}
 
 	if !security.CheckPasswordHash(password, user.Password) {
-		return "", errors.New("invalid email or password")
+		return "", 0, "", errors.New("invalid email or password")
 	}
 
-	token, err := jwt.GenerateToken(user.IDUser, user.Email, s.cfg.JWTSecret)
+	token, err := jwt.GenerateToken(user.IDUser, user.Email, s.cfg.JWTSecret, remember)
 	if err != nil {
-		return "", err
+		return "", 0, "", err
 	}
 
 	// Update remember token with the JWT token
 	err = s.repo.UpdateRememberToken(user.IDUser, token)
 	if err != nil {
-		return "", err
+		return "", 0, "", err
 	}
 
-	return token, nil
+	return token, user.RoleRef, user.Name, nil
 }
