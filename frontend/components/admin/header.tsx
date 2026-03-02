@@ -26,6 +26,8 @@ import { LogOut, User, Settings, Bell, Search } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Header } from "@/components/layout";
 import { CommandMenu } from "./command-menu";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 function getBreadcrumbs(pathname: string) {
   const segments = pathname.split("/").filter(Boolean);
@@ -38,9 +40,42 @@ function getBreadcrumbs(pathname: string) {
 }
 
 export function AdminHeader() {
+  const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const pathname = usePathname();
   const breadcrumbs = getBreadcrumbs(pathname);
+
+  const handleLogout = async () => {
+    try {
+      const token = Cookies.get("token");
+      
+      // Call backend logout if token exists
+      if (token) {
+        await fetch("http://localhost:8080/v1/auth/logout", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+      }
+
+      // Clear local state regardless of backend success
+      Cookies.remove("token");
+      localStorage.removeItem("user_name");
+      localStorage.removeItem("role_id");
+
+      // Redirect to login
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Still clear local state and redirect as a fallback
+      Cookies.remove("token");
+      localStorage.removeItem("user_name");
+      localStorage.removeItem("role_id");
+      router.push("/login");
+    }
+  };
 
   return (
     <Header fixed className="group-has-data-[collapsible=icon]/sidebar-wrapper:h-16">
@@ -117,7 +152,10 @@ export function AdminHeader() {
               <span>Settings</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer">
+            <DropdownMenuItem 
+              onClick={handleLogout}
+              className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
+            >
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>
             </DropdownMenuItem>
