@@ -97,7 +97,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#020617] text-white p-4 overflow-hidden [scrollbar-gutter:auto]">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#020617] text-white p-4 overflow-y-auto [scrollbar-gutter:stable]">
       {/* Brand Header */}
       <div className="flex items-center gap-2 mb-4">
         <span className="text-xl font-bold tracking-tight">NewsTest Login</span>
