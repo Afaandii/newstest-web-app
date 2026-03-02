@@ -27,6 +27,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { FileText } from "lucide-react";
+import { FaUserTie } from "react-icons/fa6";
 
 const navGroups = [
   {
@@ -73,8 +74,13 @@ const navGroups = [
         icon: HiOutlineUsers,
       },
       {
+        title: "Roles",
+        href: "/dashboard/roles",
+        icon: FaUserTie,
+      },
+      {
         title: "Settings",
-        href: "/dashboard/settings",
+        href: "/dashboard",
         icon: HiOutlineCog6Tooth,
       },
     ],
