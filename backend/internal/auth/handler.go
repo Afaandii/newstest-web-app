@@ -65,3 +65,27 @@ func (h *Handler) Login(c *gin.Context) {
 		"name":    name,
 	})
 }
+
+func (h *Handler) Logout(c *gin.Context) {
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"errors": "User not authenticated"})
+		return
+	}
+
+	uid, ok := userID.(uint)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": "Invalid user ID type"})
+		return
+	}
+
+	err := h.service.Logout(uid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Logout successful!",
+	})
+}

@@ -11,6 +11,7 @@ import (
 type Service interface {
 	Register(name, email, password, nip, address string) (*model.User, error)
 	Login(email, password string, remember bool) (string, uint, string, error)
+	Logout(userID uint) error
 }
 
 type service struct {
@@ -67,4 +68,8 @@ func (s *service) Login(email, password string, remember bool) (string, uint, st
 	}
 
 	return token, user.RoleRef, user.Name, nil
+}
+
+func (s *service) Logout(userID uint) error {
+	return s.repo.UpdateRememberToken(userID, "")
 }

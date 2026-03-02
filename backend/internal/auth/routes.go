@@ -2,6 +2,7 @@ package auth
 
 import (
 	"newstest-app/internal/bootstrap"
+	"newstest-app/pkg/middleware"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -16,5 +17,6 @@ func RegisterRoutesAuth(r *gin.Engine, db *gorm.DB, cfg *bootstrap.Config) {
 	{
 		group.POST("/register", handler.Register)
 		group.POST("/login", handler.Login)
+		group.POST("/logout", middleware.AuthMiddleware(cfg), handler.Logout)
 	}
 }
