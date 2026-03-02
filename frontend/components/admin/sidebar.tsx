@@ -40,7 +40,7 @@ const navGroups = [
       },
       {
         title: "Analytics",
-        href: "/dashboard/analytics",
+        href: "/dashboard",
         icon: HiOutlineChartBar,
       },
     ],
@@ -138,7 +138,7 @@ export function AdminSidebar() {
       <SidebarFooter className="p-4">
         <div className="flex items-center justify-between group-data-[collapsible=icon]:hidden">
           <div className="flex flex-col gap-0.5 leading-none">
-            <span className="text-sm font-semibold text-muted-foreground">© 2026 Newstest Admin</span>
+            <span className="text-sm font-semibold text-muted-foreground">Newstest Admin ©2026</span>
           </div>
         </div>
       </SidebarFooter>
