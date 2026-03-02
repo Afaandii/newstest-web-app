@@ -88,7 +88,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#020617] text-white p-4 overflow-y-auto [scrollbar-gutter:stable] scrollbar-custom">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#020617] text-white p-4 overflow-y-auto [scrollbar-gutter:stable]">
       {/* Brand Header */}
       <div className="flex items-center gap-2 mb-6 pt-8">
         <span className="text-xl font-bold tracking-tight">NewsTest Register</span>
