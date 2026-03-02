@@ -274,8 +274,8 @@ export function PostForm({ initialData, id }: PostFormProps) {
         </div>
 
         <div className="flex items-center gap-4 pt-6 border-t">
-          <Button type="submit" size="lg" className="min-w-[150px]">
-            {isEditing ? "Update Post" : "Publish Post"}
+          <Button type="submit" size="lg" className="min-w-[100px] cursor-pointer">
+            {isEditing ? "Submit" : "Submit"}
           </Button>
           <Button variant="outline" size="lg" asChild>
             <Link href="/dashboard/posts">Cancel</Link>

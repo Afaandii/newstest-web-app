@@ -121,8 +121,8 @@ export function CategoryForm({ initialData, id }: CategoryFormProps) {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button type="submit">
-            {isEditing ? "Update Category" : "Create Category"}
+          <Button type="submit" className="cursor-pointer">
+            {isEditing ? "Submit" : "Submit"}
           </Button>
           <Button variant="outline" asChild>
             <Link href="/dashboard/categories">Cancel</Link>

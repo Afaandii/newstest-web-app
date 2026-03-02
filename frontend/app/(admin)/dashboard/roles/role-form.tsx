@@ -121,8 +121,8 @@ export function RoleForm({ initialData, id }: RoleFormProps) {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button type="submit">
-            {isEditing ? "Update Role" : "Create Role"}
+          <Button type="submit" className="cursor-pointer">
+            {isEditing ? "Submit" : "Submit"}
           </Button>
           <Button variant="outline" asChild>
             <Link href="/dashboard/roles">Cancel</Link>

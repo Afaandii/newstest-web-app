@@ -304,8 +304,8 @@ export function UserForm({ initialData, id }: UserFormProps) {
         </div>
 
         <div className="flex items-center gap-4 pt-6 border-t font-semibold">
-          <Button type="submit" size="lg" className="min-w-[150px]">
-            {isEditing ? "Update User" : "Save User"}
+          <Button type="submit" size="lg" className="min-w-[100px] cursor-pointer">
+            {isEditing ? "Submit" : "Submit"}
           </Button>
           <Button variant="outline" size="lg" asChild>
             <Link href="/dashboard/users">Cancel</Link>
