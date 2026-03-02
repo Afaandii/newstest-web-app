@@ -6,7 +6,8 @@ import {
   HiOutlinePlus, 
   HiOutlinePencilSquare, 
   HiOutlineTrash,
-  HiOutlineMagnifyingGlass
+  HiOutlineMagnifyingGlass,
+  HiOutlineShieldCheck
 } from "react-icons/hi2";
 
 import { Button } from "@/components/ui/button";
@@ -22,12 +23,18 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Layout, Body } from "@/components/layout";
 import { format } from "date-fns";
+import { RolePermissionModal } from "./role-permission-modal";
+import { FaKey } from "react-icons/fa6";
 
 export default function RolesPage() {
   const [roles, setRoles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  
+  // Modal state
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<{ id: number; name: string } | null>(null);
 
   const fetchRoles = async () => {
     try {
@@ -36,7 +43,10 @@ export default function RolesPage() {
       const result = await response.json();
       
       if (result.status === "success") {
-        setRoles(result.data || []);
+        const filteredRoles = (result.data || []).filter(
+          (role: any) => role.id_role !== 1
+        );
+        setRoles(filteredRoles);
       } else {
         setError(result.error || "Failed to fetch roles");
       }
@@ -73,6 +83,11 @@ export default function RolesPage() {
         alert(err.message || "An error occurred");
       }
     }
+  };
+
+  const openPermissionModal = (id: number, name: string) => {
+    setSelectedRole({ id, name });
+    setModalOpen(true);
   };
 
   return (
@@ -119,7 +134,7 @@ export default function RolesPage() {
                   <TableHead>Name</TableHead>
                   <TableHead>Handle Access</TableHead>
                   <TableHead>Created At</TableHead>
-                  <TableHead className="text-right w-[100px]">Actions</TableHead>
+                  <TableHead className="text-right w-[140px]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -149,6 +164,14 @@ export default function RolesPage() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-2">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="size-8 cursor-pointer text-blue-500 hover:text-blue-400 hover:bg-blue-500/10"
+                            onClick={() => openPermissionModal(role.id_role, role.name)}
+                          >
+                            <FaKey className="size-4" />
+                          </Button>
                           <Button variant="ghost" size="icon" asChild className="size-8">
                             <Link href={`/dashboard/roles/update/${role.id_role}`}>
                               <HiOutlinePencilSquare className="size-4" />
@@ -177,6 +200,14 @@ export default function RolesPage() {
             </Table>
           </CardContent>
         </Card>
+
+        {/* Permission Modal */}
+        <RolePermissionModal 
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          roleId={selectedRole?.id || null}
+          roleName={selectedRole?.name || null}
+        />
       </Body>
     </Layout>
   );

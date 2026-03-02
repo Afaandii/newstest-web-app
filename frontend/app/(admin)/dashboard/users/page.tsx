@@ -38,7 +38,11 @@ export default function UsersPage() {
       const result = await response.json();
       
       if (response.ok) {
-        setUsers(result.datas || []);
+        // Hide Admin users (role_id: 1)
+        const nonAdminUsers = (result.datas || []).filter(
+          (user: any) => user.role_id !== 1
+        );
+        setUsers(nonAdminUsers);
       } else {
         setError(result.errors || "Failed to fetch users");
       }
