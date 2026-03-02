@@ -61,10 +61,11 @@ func (s *service) Login(email, password string, remember bool) (string, uint, st
 		return "", 0, "", err
 	}
 
-	// Update remember token with the JWT token
-	err = s.repo.UpdateRememberToken(user.IDUser, token)
-	if err != nil {
-		return "", 0, "", err
+	if remember {
+		err = s.repo.UpdateRememberToken(user.IDUser, token)
+		if err != nil {
+			return "", 0, "", err
+		}
 	}
 
 	return token, user.RoleRef, user.Name, nil
