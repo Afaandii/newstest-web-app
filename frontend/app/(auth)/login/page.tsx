@@ -76,8 +76,16 @@ export default function LoginPage() {
         const cookieOptions = values.remember ? { expires: 7 } : {};
         Cookies.set("token", result.token, cookieOptions);
         
-        // Redirect to dashboard
-        router.push("/dashboard");
+        // Store name and role_id in localStorage for client-side checks
+        localStorage.setItem("user_name", result.name);
+        localStorage.setItem("role_id", result.role_id.toString());
+
+        // Redirect based on role
+        if (result.role_id === 1) {
+          router.push("/dashboard");
+        } else {
+          router.push("/");
+        }
       } else {
         alert(result.errors || "Login failed. Please check your credentials.");
       }
