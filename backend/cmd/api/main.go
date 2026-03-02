@@ -10,6 +10,7 @@ import (
 	"newstest-app/internal/permissions"
 	"newstest-app/internal/posts"
 	"newstest-app/internal/role"
+	rolepermissions "newstest-app/internal/rolePermissions"
 	"newstest-app/internal/user"
 
 	"newstest-app/pkg/middleware"
@@ -31,6 +32,7 @@ func main() {
 
 	category.RegisterRoutesCategory(r, db)
 	role.RegisterRoutesRole(r, db)
+	rolepermissions.RegisterRoutesRolePermissions(r, db)
 	permissions.RegisterRoutesPermissions(r, db)
 	posts.RegisterRoutesPosts(r, db, cfg)
 	user.RegisterRouteUser(r, db, cfg)

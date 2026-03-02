@@ -12,9 +12,9 @@ func RegisterRoutesPermissions(r *gin.Engine, db *gorm.DB) {
 
 	group := r.Group("/v1/permissions")
 	{
-		group.GET("/", handler.GetAll)
+		group.GET("", handler.GetAll)
 		group.GET("/:id", handler.GetByID)
-		group.POST("/", handler.Create)
+		group.POST("", handler.Create)
 		group.PUT("/:id", handler.Update)
 		group.DELETE("/:id", handler.Delete)
 	}
