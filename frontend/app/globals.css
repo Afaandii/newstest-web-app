@@ -116,32 +116,6 @@
   --sidebar-ring: oklch(0.588 0.158 241.966);
 }
 
-/* Custom Scrollbar Global */
-*::-webkit-scrollbar {
-  width: 6px !important;
-  height: 6px !important;
-}
-
-*::-webkit-scrollbar-track {
-  background: transparent !important;
-}
-
-*::-webkit-scrollbar-thumb {
-  background: rgba(77, 208, 225, 0.1) !important;
-  border-radius: 10px !important;
-  border: 1px solid transparent !important;
-  background-clip: content-box !important;
-}
-
-*::-webkit-scrollbar-thumb:hover {
-  background: rgba(77, 208, 225, 0.2) !important;
-}
-
-/* Firefox */
-* {
-  scrollbar-width: thin !important;
-  scrollbar-color: rgba(77, 208, 225, 0.1) transparent !important;
-}
 
 @layer base {
   * {
@@ -212,4 +186,38 @@
   100% {
     transform: translateX(-50%);
   }
+}
+
+/* ===== FINAL OVERRIDES (MAX SPECIFICITY) ===== */
+
+/* Smooth Scroll */
+:root,
+html {
+  scroll-behavior: smooth !important;
+}
+
+/* Custom Scrollbar Global Refinement (Shadcn Style) */
+::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+  display: block !important;
+}
+
+::-webkit-scrollbar-track {
+  background: #020817 !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155 !important;
+  border-radius: 100px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569 !important;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin !important;
+  scrollbar-color: #334155 #020817 !important;
 }
