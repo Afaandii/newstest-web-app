@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Menu, X } from "lucide-react";
 
 const categories = [
@@ -17,6 +17,15 @@ const categories = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <>
@@ -99,7 +108,11 @@ export default function Navbar() {
 
       {/* Category tabs — STICKY */}
       <nav
-        className="sticky top-0 z-50 glass-category border-b border-white/10"
+        className={`sticky top-0 z-50 border-b transition-all duration-300 ${
+          isScrolled 
+            ? "glass-category border-white/10 py-1" 
+            : "bg-transparent border-white/5 py-0"
+        }`}
       >
         <div className="max-w-7xl mx-auto px-4">
           {/* Desktop */}
