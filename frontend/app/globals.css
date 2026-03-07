@@ -178,11 +178,11 @@
   }
 
   .glass-category {
-    background: rgba(255, 255, 255, 0.06);
-    /* Slightly more opaque */
-    backdrop-filter: blur(24px);
-    /* Higher blur for better text isolation */
-    -webkit-backdrop-filter: blur(24px);
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(20px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
   }
 
   .glass-shine {
