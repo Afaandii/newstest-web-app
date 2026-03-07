@@ -19,10 +19,10 @@ export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
-    <header className="relative z-50">
-      {/* Top bar — Logo + Search */}
+    <>
+      {/* Top bar — Logo + Search — SCROLLS AWAY */}
       <div
-        className="border-b"
+        className="relative z-[60] border-b"
         style={{ borderColor: "rgba(77, 208, 225, 0.1)" }}
       >
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -97,12 +97,9 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Category tabs */}
+      {/* Category tabs — STICKY */}
       <nav
-        style={{
-          background: "rgba(77, 208, 225, 0.06)",
-          borderBottom: "1px solid rgba(77, 208, 225, 0.08)",
-        }}
+        className="sticky top-0 z-50 glass-category border-b border-white/10"
       >
         <div className="max-w-7xl mx-auto px-4">
           {/* Desktop */}
@@ -173,6 +170,6 @@ export default function Navbar() {
           )}
         </div>
       </nav>
-    </header>
+    </>
   );
 }
