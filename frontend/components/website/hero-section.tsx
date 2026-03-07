@@ -8,138 +8,64 @@ interface HeroSectionProps {
 
 export default function HeroSection({ main, sidebar }: HeroSectionProps) {
   return (
-    <section className="max-w-7xl mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Article — Large */}
-        <div className="lg:col-span-2">
-          <article
-            className="group relative overflow-hidden cursor-pointer transition-all duration-500 hover:scale-[1.005]"
-            style={{
-              background: "rgba(77, 208, 225, 0.06)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              borderRadius: "1rem",
-              border: "1px solid rgba(77, 208, 225, 0.1)",
-              boxShadow:
-                "0 8px 40px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(77, 208, 225, 0.08)",
-            }}
-          >
-            {/* Image */}
-            <div className="relative h-72 md:h-80 overflow-hidden" style={{ borderRadius: "1rem 1rem 0 0" }}>
-              <img
-                src={main.imageUrl}
-                alt={main.title}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(to top, rgba(8, 20, 35, 0.9) 0%, rgba(8, 20, 35, 0.3) 40%, transparent 70%)",
-                }}
-              />
-              {/* Category */}
-              <div className="absolute top-4 left-4">
-                <span
-                  className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-widest text-white"
-                  style={{
-                    background: "rgba(77, 208, 225, 0.25)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "0.6rem",
-                    border: "1px solid rgba(77, 208, 225, 0.3)",
-                  }}
-                >
+    <section className="max-w-7xl mx-auto px-4 py-12">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        {/* Main Article — Large (Centered weight) */}
+        <div className="lg:col-span-3">
+          <article className="group glass-water glass-shine border-none transition-all duration-700">
+            <div className="grid grid-cols-1 md:grid-cols-5 h-full">
+              {/* Text Side (3/5) */}
+              <div className="md:col-span-3 p-8 flex flex-col justify-center border-r border-white/5">
+                <span className="font-serif text-sm font-bold uppercase tracking-[0.3em] text-[#4dd0e1] mb-6 block">
                   {main.category}
                 </span>
-              </div>
-              {/* Title overlay */}
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <h2 className="text-2xl md:text-3xl font-extrabold text-white leading-tight group-hover:text-[#4dd0e1] transition-colors duration-300">
+                <h2 className="font-serif text-3xl md:text-5xl font-bold text-white leading-[1.1] mb-6 group-hover:text-white/90 transition-colors duration-300">
                   {main.title}
                 </h2>
-              </div>
-            </div>
-
-            {/* Text content */}
-            <div className="p-6">
-              <p className="text-white/50 text-sm md:text-base leading-relaxed mb-4 first-letter:text-3xl first-letter:font-bold first-letter:text-[#4dd0e1] first-letter:mr-1 first-letter:float-left">
-                {main.excerpt}
-              </p>
-              <div className="flex items-center gap-3 text-xs text-white/40">
-                <div
-                  className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white"
-                  style={{ background: "linear-gradient(135deg, #4dd0e1, #00897b)" }}
-                >
-                  {main.author.charAt(0)}
+                <p className="text-white/60 text-lg leading-relaxed mb-8 font-sans">
+                  {main.excerpt}
+                </p>
+                <div className="flex items-center gap-4 text-xs font-sans uppercase tracking-widest text-white/40">
+                  <span className="font-bold text-white/60">{main.author}</span>
+                  <div className="flex items-center gap-2">
+                    <Clock size={12} />
+                    <span>{main.readTime}</span>
+                  </div>
                 </div>
-                <span className="font-medium text-white/60">{main.author}</span>
-                <span>•</span>
-                <span>{main.date}</span>
-                <span>•</span>
-                <span className="flex items-center gap-1">
-                  <Clock size={12} />
-                  {main.readTime}
-                </span>
+              </div>
+
+              {/* Image Side (2/5) */}
+              <div className="md:col-span-2 relative min-h-[300px] overflow-hidden bg-white/5">
+                <img
+                  src={main.imageUrl}
+                  alt={main.title}
+                  className="absolute inset-0 w-full h-full object-cover grayscale-[0.2] transition-transform duration-[2000ms] group-hover:scale-110"
+                />
               </div>
             </div>
           </article>
         </div>
 
-        {/* Sidebar Article */}
-        <div className="lg:col-span-1">
-          <article
-            className="group relative h-full overflow-hidden cursor-pointer transition-all duration-500 hover:scale-[1.01]"
-            style={{
-              background: "rgba(77, 208, 225, 0.06)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              borderRadius: "1rem",
-              border: "1px solid rgba(77, 208, 225, 0.1)",
-              boxShadow:
-                "0 8px 40px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(77, 208, 225, 0.08)",
-            }}
-          >
-            <div className="relative h-52 overflow-hidden" style={{ borderRadius: "1rem 1rem 0 0" }}>
-              <img
-                src={sidebar.imageUrl}
-                alt={sidebar.title}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(to top, rgba(8, 20, 35, 0.9) 0%, transparent 60%)",
-                }}
-              />
-              <div className="absolute top-3 left-3">
-                <span
-                  className="px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white"
-                  style={{
-                    background: "rgba(77, 208, 225, 0.25)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "0.6rem",
-                    border: "1px solid rgba(77, 208, 225, 0.3)",
-                  }}
-                >
-                  {sidebar.category}
-                </span>
-              </div>
+        {/* Sidebar Article (1/4) - Very Newspaper Style */}
+        <div className="lg:col-span-1 border-l border-white/10 pl-8 hidden lg:block">
+          <div className="space-y-8">
+            <div className="border-b border-white/10 pb-2">
+              <h4 className="font-serif text-xs font-bold uppercase tracking-widest text-[#4dd0e1]">Terbaru</h4>
             </div>
-            <div className="p-5">
-              <h3 className="text-lg font-bold text-white leading-snug mb-3 group-hover:text-[#4dd0e1] transition-colors duration-300">
+            <article className="group cursor-pointer">
+              <h3 className="font-serif text-xl font-bold text-white leading-snug mb-3 group-hover:text-white/70 transition-colors">
                 {sidebar.title}
               </h3>
-              <p className="text-white/45 text-sm leading-relaxed mb-4 line-clamp-3">
+              <p className="text-white/50 text-sm leading-relaxed mb-4 line-clamp-4 font-sans">
                 {sidebar.excerpt}
               </p>
-              <div className="flex items-center gap-3 text-xs text-white/40">
-                <span className="font-medium text-white/60">{sidebar.author}</span>
-                <span>•</span>
-                <span>{sidebar.date}</span>
+              <div className="text-[10px] font-sans uppercase tracking-[0.2em] text-white/30">
+                {sidebar.author} • {sidebar.readTime}
               </div>
-            </div>
-          </article>
+            </article>
+            <div className="nyt-divider" />
+            {/* You could add more sidebar items here if dummy-news supported it */}
+          </div>
         </div>
       </div>
     </section>
