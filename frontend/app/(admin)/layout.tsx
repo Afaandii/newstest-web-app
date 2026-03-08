@@ -1,3 +1,7 @@
+"use client";
+
+import * as React from "react";
+import { useEffect } from "react";
 import { SidebarProvider, SidebarRail } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/admin/sidebar";
 import { AdminHeader } from "@/components/admin/header";
@@ -9,6 +13,11 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  useEffect(() => {
+    document.documentElement.classList.add("admin-mode");
+    return () => document.documentElement.classList.remove("admin-mode");
+  }, []);
+
   return (
     <ThemeProvider
       attribute="class"
@@ -20,9 +29,9 @@ export default function AdminLayout({
         <SidebarProvider>
           <SidebarRail />
           <AdminSidebar />
-          <div className="flex flex-1 flex-col overflow-y-auto bg-background relative scrollbar-custom scroll-smooth">
+          <div className="flex flex-1 flex-col overflow-y-auto bg-background relative admin-scroll-container admin-body admin-main scroll-smooth">
             <AdminHeader />
-            <main className="flex-1 pt-16">
+            <main className="flex-1 pt-16 admin-main">
               {children}
             </main>
           </div>
