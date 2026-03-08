@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import {
   Card,
   CardContent,
@@ -19,46 +23,9 @@ import {
   FileText,
   TrendingUp,
   Eye,
-  Plus,
 } from "lucide-react";
 import { Layout, Body } from "@/components/layout";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-const statsCards = [
-  {
-    title: "Total Users",
-    value: "1,234",
-    change: "+12%",
-    icon: Users,
-    description: "from last month",
-    trend: "up",
-  },
-  {
-    title: "Total Posts",
-    value: "456",
-    change: "+8%",
-    icon: FileText,
-    description: "from last month",
-    trend: "up",
-  },
-  {
-    title: "Total Views",
-    value: "89,012",
-    change: "+23%",
-    icon: Eye,
-    description: "from last month",
-    trend: "up",
-  },
-  {
-    title: "Engagement",
-    value: "34.5%",
-    change: "+5.2%",
-    icon: TrendingUp,
-    description: "from last month",
-    trend: "up",
-  },
-];
 
 const recentPosts = [
   {
@@ -117,6 +84,85 @@ function getStatusVariant(status: string) {
 }
 
 export default function DashboardPage() {
+  const [stats, setStats] = useState<{
+    total_users: number;
+    total_posts: number;
+    recent_posts: Array<{
+      id: number;
+      title: string;
+      author: string;
+      created_at: string;
+      views: number;
+    }>;
+    top_categories: Array<{
+      name: string;
+      count: number;
+    }>;
+  }>({
+    total_users: 0,
+    total_posts: 0,
+    recent_posts: [],
+    top_categories: [],
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const token = Cookies.get("token");
+        const response = await fetch("http://localhost:8080/v1/admin/dashboard/stats", {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+        if (response.ok) {
+          const result = await response.json();
+          setStats(result.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch dashboard stats:", error);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  const totalPostsAcrossCategories = stats.top_categories.reduce((acc, cat) => acc + cat.count, 0);
+
+  const statsCards = [
+    {
+      title: "Total Users",
+      value: stats.total_users.toLocaleString(),
+      change: "+12%",
+      icon: Users,
+      description: "from last month",
+      trend: "up",
+    },
+    {
+      title: "Total Posts",
+      value: stats.total_posts.toLocaleString(),
+      change: "+8%",
+      icon: FileText,
+      description: "from last month",
+      trend: "up",
+    },
+    {
+      title: "Total Views",
+      value: "89,012",
+      change: "+23%",
+      icon: Eye,
+      description: "from last month",
+      trend: "up",
+    },
+    {
+      title: "Engagement",
+      value: "34.5%",
+      change: "+5.2%",
+      icon: TrendingUp,
+      description: "from last month",
+      trend: "up",
+    },
+  ];
+
   return (
     <Layout>
       <Body className="space-y-8">
@@ -176,22 +222,30 @@ export default function DashboardPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {recentPosts.map((post) => (
-                    <TableRow key={post.id} className="cursor-pointer group">
-                      <TableCell className="font-semibold truncate max-w-[300px] group-hover:text-primary transition-colors">
-                        {post.title}
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">{post.author}</TableCell>
-                      <TableCell>
-                        <Badge variant={getStatusVariant(post.status)} className="px-2 py-0 border-none">
-                          {post.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right font-mono text-sm leading-none">
-                        {post.views}
+                  {(stats.recent_posts && stats.recent_posts.length > 0) ? (
+                    stats.recent_posts.map((post) => (
+                      <TableRow key={post.id_post} className="cursor-pointer group">
+                        <TableCell className="font-semibold truncate max-w-[300px] group-hover:text-primary transition-colors">
+                          {post.title}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">{post.author || 'Unknown'}</TableCell>
+                        <TableCell>
+                          <Badge variant="default" className="px-2 py-0 border-none">
+                            Published
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right font-mono text-sm leading-none">
+                          0
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
+                        No recent activity found.
                       </TableCell>
                     </TableRow>
-                  ))}
+                  )}
                 </TableBody>
               </Table>
             </CardContent>
@@ -202,30 +256,38 @@ export default function DashboardPage() {
             <CardHeader>
               <CardTitle>Top Categories</CardTitle>
               <CardDescription>
-                Most popular news categories this week.
+                Most popular news categories based on post volume.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {[
-                  { name: "Technology", count: "45%", color: "bg-blue-500" },
-                  { name: "Economy", count: "30%", color: "bg-emerald-500" },
-                  { name: "Politics", count: "15%", color: "bg-amber-500" },
-                  { name: "Lifestyle", count: "10%", color: "bg-rose-500" },
-                ].map((cat) => (
-                  <div key={cat.name} className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="font-medium">{cat.name}</span>
-                      <span className="text-muted-foreground">{cat.count}</span>
-                    </div>
-                    <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-                      <div
-                        className={cn("h-full rounded-full transition-all duration-500", cat.color)}
-                        style={{ width: cat.count }}
-                      />
-                    </div>
+                {(stats.top_categories && stats.top_categories.length > 0) ? (
+                  stats.top_categories.map((cat, index) => {
+                    const colors = ["bg-blue-500", "bg-emerald-500", "bg-amber-500", "bg-rose-500"];
+                    const percent = totalPostsAcrossCategories > 0 
+                      ? Math.round((cat.count / totalPostsAcrossCategories) * 100) 
+                      : 0;
+                    
+                    return (
+                      <div key={cat.name} className="space-y-2">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="font-medium">{cat.name}</span>
+                          <span className="text-muted-foreground">{percent}%</span>
+                        </div>
+                        <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+                          <div
+                            className={cn("h-full rounded-full transition-all duration-500", colors[index % colors.length])}
+                            style={{ width: `${percent}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="h-40 flex items-center justify-center text-muted-foreground">
+                    No categories found.
                   </div>
-                ))}
+                )}
               </div>
             </CardContent>
           </Card>
