@@ -10,6 +10,7 @@ type AuthRepository interface {
 	FindByEmail(email string) (*model.User, error)
 	Create(user *model.User) error
 	UpdateRememberToken(id uint, token string) error
+	FindByID(id uint) (*model.User, error)
 }
 
 type authRepository struct {
@@ -35,4 +36,13 @@ func (r *authRepository) Create(user *model.User) error {
 
 func (r *authRepository) UpdateRememberToken(id uint, token string) error {
 	return r.db.Model(&model.User{}).Where("id_user = ?", id).Update("remember_tokens", token).Error
+}
+
+func (r *authRepository) FindByID(id uint) (*model.User, error) {
+	var user model.User
+	err := r.db.Where("id_user = ?", id).First(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
 }
