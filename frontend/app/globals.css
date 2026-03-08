@@ -85,23 +85,23 @@
 }
 
 .dark {
-  --background: oklch(0.25 0.08 190);
+  --background: oklch(0.12 0.03 255);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.18 0.03 255);
+  --card: oklch(0.15 0.03 255);
   --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.18 0.03 255);
+  --popover: oklch(0.15 0.03 255);
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.588 0.158 241.966);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.22 0.03 255);
+  --secondary: oklch(0.18 0.03 255);
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.22 0.03 255);
+  --muted: oklch(0.18 0.03 255);
   --muted-foreground: oklch(0.65 0.02 255);
-  --accent: oklch(0.22 0.03 255);
+  --accent: oklch(0.18 0.03 255);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.396 0.141 25.723);
-  --border: oklch(0.24 0.03 255);
-  --input: oklch(0.24 0.03 255);
+  --border: oklch(0.2 0.03 255);
+  --input: oklch(0.2 0.03 255);
   --ring: oklch(0.588 0.158 241.966);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
@@ -227,28 +227,128 @@ html {
   scroll-behavior: smooth !important;
 }
 
-/* Custom Scrollbar - Light Newspaper Theme */
-::-webkit-scrollbar {
+/* Custom Scrollbar - Website (Newspaper Theme) */
+html:not(.admin-mode) ::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+}
+
+html:not(.admin-mode) ::-webkit-scrollbar-track {
+  background: #f0f0f0 !important;
+}
+
+html:not(.admin-mode) ::-webkit-scrollbar-thumb {
+  background: #b0b0b0 !important;
+  border-radius: 100px !important;
+}
+
+html:not(.admin-mode) ::-webkit-scrollbar-thumb:hover {
+  background: #888 !important;
+}
+
+/* ============================================================ */
+/* 1. CSS UNTUK BROWSER (SCROLLBAR DASHBOARD - PALING KANAN)      */
+/* ============================================================ */
+/* html.admin-mode::-webkit-scrollbar {
   width: 6px !important;
   height: 6px !important;
   display: block !important;
 }
 
-::-webkit-scrollbar-track {
-  background: #f0f0f0 !important;
+html.admin-mode::-webkit-scrollbar-track {
+  background: oklch(0.12 0.03 255) !important;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #b0b0b0 !important;
-  border-radius: 100px !important;
+html.admin-mode::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 10px !important;
+  border: none !important;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #888 !important;
+html.admin-mode::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
 }
 
-/* Firefox */
-* {
+html.admin-mode::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+}
+
+html.admin-mode::-webkit-scrollbar-button:vertical:decrement,
+html.admin-mode::-webkit-scrollbar-button:vertical:increment,
+html.admin-mode::-webkit-scrollbar-button:horizontal:decrement,
+html.admin-mode::-webkit-scrollbar-button:horizontal:increment,
+html.admin-mode::-webkit-scrollbar-button:start,
+html.admin-mode::-webkit-scrollbar-button:end,
+html.admin-mode::-webkit-scrollbar-button:single-button,
+html.admin-mode::-webkit-scrollbar-button:double-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+} */
+
+/* ============================================================ */
+/* 2. CSS UNTUK SIDEBAR & KONTEN INTERNAL (DI DALAM DASHBOARD)    */
+/* ============================================================ */
+/* .admin-mode *::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+  display: block !important;
+}
+
+.admin-mode *::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.admin-mode *::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 10px !important;
+  border: none !important;
+}
+
+.admin-mode *::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.admin-mode *::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+}
+
+.admin-mode *::-webkit-scrollbar-button:vertical:decrement,
+.admin-mode *::-webkit-scrollbar-button:vertical:increment,
+.admin-mode *::-webkit-scrollbar-button:horizontal:decrement,
+.admin-mode *::-webkit-scrollbar-button:horizontal:increment,
+.admin-mode *::-webkit-scrollbar-button:start,
+.admin-mode *::-webkit-scrollbar-button:end,
+.admin-mode *::-webkit-scrollbar-button:single-button,
+.admin-mode *::-webkit-scrollbar-button:double-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+} */
+
+/* ============================================================ */
+/* 3. ARROWS (PANAH) UNTUK SEMUA SCROLLBAR DASHBOARD              */
+/* ============================================================ */
+
+/* Removing explicit arrow styles as they are hidden now */
+
+/* Firefox Support */
+.admin-mode {
   scrollbar-width: thin !important;
-  scrollbar-color: #b0b0b0 #f0f0f0 !important;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent !important;
+}
+
+/* Scrollbar Hide Utility */
+.scrollbar-none {
+  scrollbar-width: none !important;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none !important;
 }
