@@ -10,8 +10,9 @@ import (
 
 type Service interface {
 	Register(name, email, password, nip, address string) (*model.User, error)
-	Login(email, password string, remember bool) (string, uint, string, error)
+	Login(email, password string, remember bool) (string, uint, string, string, error)
 	Logout(userID uint) error
+	GetProfile(userID uint) (*model.User, error)
 }
 
 type service struct {
@@ -46,31 +47,35 @@ func (s *service) Register(name, email, password, nip, address string) (*model.U
 	return user, nil
 }
 
-func (s *service) Login(email, password string, remember bool) (string, uint, string, error) {
+func (s *service) Login(email, password string, remember bool) (string, uint, string, string, error) {
 	user, err := s.repo.FindByEmail(email)
 	if err != nil {
-		return "", 0, "", errors.New("invalid email or password")
+		return "", 0, "", "", errors.New("invalid email or password")
 	}
 
 	if !security.CheckPasswordHash(password, user.Password) {
-		return "", 0, "", errors.New("invalid email or password")
+		return "", 0, "", "", errors.New("invalid email or password")
 	}
 
 	token, err := jwt.GenerateToken(user.IDUser, user.Email, s.cfg.JWTSecret, remember)
 	if err != nil {
-		return "", 0, "", err
+		return "", 0, "", "", err
 	}
 
 	if remember {
 		err = s.repo.UpdateRememberToken(user.IDUser, token)
 		if err != nil {
-			return "", 0, "", err
+			return "", 0, "", "", err
 		}
 	}
 
-	return token, user.RoleRef, user.Name, nil
+	return token, user.RoleRef, user.Name, user.Email, nil
 }
 
 func (s *service) Logout(userID uint) error {
 	return s.repo.UpdateRememberToken(userID, "")
+}
+
+func (s *service) GetProfile(userID uint) (*model.User, error) {
+	return s.repo.FindByID(userID)
 }

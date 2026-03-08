@@ -17,6 +17,7 @@ func RegisterRoutesAuth(r *gin.Engine, db *gorm.DB, cfg *bootstrap.Config) {
 	{
 		group.POST("/register", handler.Register)
 		group.POST("/login", handler.Login)
+		group.GET("/me", middleware.AuthMiddleware(cfg), handler.GetMe)
 		group.POST("/logout", middleware.AuthMiddleware(cfg), handler.Logout)
 	}
 }
