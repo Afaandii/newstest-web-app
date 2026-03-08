@@ -77,7 +77,8 @@ export default function LoginPage() {
         Cookies.set("token", result.token, cookieOptions);
         
         // Store name and role_id in localStorage for client-side checks
-        localStorage.setItem("user_name", result.name);
+        localStorage.setItem("username", result.name);
+        localStorage.setItem("email", result.email);
         localStorage.setItem("role_id", result.role_id.toString());
 
         // Redirect based on role

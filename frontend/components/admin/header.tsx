@@ -44,6 +44,35 @@ export function AdminHeader() {
   const [open, setOpen] = React.useState(false);
   const pathname = usePathname();
   const breadcrumbs = getBreadcrumbs(pathname);
+  const [user, setUser] = React.useState<{ name: string; email: string; avatar?: string } | null>(null);
+
+  React.useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = Cookies.get("token");
+        if (!token) return;
+
+        const response = await fetch("http://localhost:8080/v1/auth/me", {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          setUser({
+            name: result.data.name,
+            email: result.data.email,
+            avatar: result.data.avatar,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -62,7 +91,8 @@ export function AdminHeader() {
 
       // Clear local state regardless of backend success
       Cookies.remove("token");
-      localStorage.removeItem("user_name");
+      localStorage.removeItem("username");
+      localStorage.removeItem("email");
       localStorage.removeItem("role_id");
 
       // Redirect to login
@@ -71,7 +101,8 @@ export function AdminHeader() {
       console.error("Logout failed:", error);
       // Still clear local state and redirect as a fallback
       Cookies.remove("token");
-      localStorage.removeItem("user_name");
+      localStorage.removeItem("username");
+      localStorage.removeItem("email");
       localStorage.removeItem("role_id");
       router.push("/login");
     }
@@ -124,11 +155,11 @@ export function AdminHeader() {
         {/* User Menu */}
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-9 px-2 gap-2 hover:bg-transparent">
-              <Avatar className="h-8 w-8 shadow-sm">
-                {/* <AvatarImage src="/avatars/admin.png" alt="Admin" /> */}
+            <Button variant="ghost" className="relative h-9 px-2 gap-2 hover:bg-transparent cursor-pointer">
+              <Avatar className="h-8 w-12 shadow-sm">
+                {user?.avatar && <AvatarImage src={user.avatar} alt={user.name} />}
                 <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
-                  AF
+                  {user?.name ? user.name.substring(0, 2).toUpperCase() : ""}
                 </AvatarFallback>
               </Avatar>
             </Button>
@@ -136,18 +167,18 @@ export function AdminHeader() {
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">Admin</p>
+                <p className="text-sm font-medium leading-none">{user?.name || "Loading..."}</p>
                 <p className="text-xs leading-none text-muted-foreground">
-                  admin@newstest.com
+                  {user?.email || ""}
                 </p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
               <User className="mr-2 h-4 w-4" />
               <span>Profile</span>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
               <Settings className="mr-2 h-4 w-4" />
               <span>Settings</span>
             </DropdownMenuItem>
