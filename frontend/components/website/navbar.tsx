@@ -14,6 +14,16 @@ const categories = [
   "Gaya Hidup",
 ];
 
+function getFormattedDate() {
+  const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+  const months = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+  ];
+  const d = new Date();
+  return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -29,120 +39,95 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Top bar — Logo + Search — SCROLLS AWAY */}
-      <div
-        className="relative z-[60] border-b"
-        style={{ borderColor: "rgba(77, 208, 225, 0.1)" }}
-      >
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          {/* Logo */}
-          <a href="/" className="flex items-center gap-3 group">
-            <div>
-              <h1
-                className="text-2xl md:text-3xl font-black tracking-tight"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #e0f7fa, #4dd0e1, #00897b)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                NewsTest.
-              </h1>
-              <p className="text-[10px] tracking-[0.3em] uppercase text-white/30 -mt-0.5">
-                Portal Berita
-              </p>
-            </div>
-          </a>
+      {/* Top bar — Masthead — SCROLLS AWAY */}
+      <div className="relative z-[60] bg-white">
 
-          {/* Right actions */}
-          <div className="flex items-center gap-2">
-            {/* Search */}
-            <div className="relative">
-              {searchOpen && (
-                <input
-                  type="text"
-                  placeholder="Cari berita..."
-                  autoFocus
-                  className="absolute right-10 top-1/2 -translate-y-1/2 w-48 md:w-64 px-4 py-2 text-sm text-white/90 placeholder:text-white/30 outline-none"
-                  style={{
-                    background: "rgba(77, 208, 225, 0.1)",
-                    borderRadius: "0.75rem",
-                    border: "1px solid rgba(77, 208, 225, 0.2)",
-                    backdropFilter: "blur(12px)",
-                  }}
-                />
-              )}
-              <button
-                onClick={() => setSearchOpen(!searchOpen)}
-                className="p-2.5 rounded-xl text-white/50 hover:text-[#4dd0e1] hover:bg-white/5 transition-all duration-300"
-                aria-label="Search"
+        <div className="max-w-7xl mx-auto px-4 py-5">
+          {/* Date row */}
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-[11px] tracking-[0.15em] uppercase text-gray-500 font-sans">
+              {getFormattedDate()}
+            </p>
+            <div className="flex items-center gap-2">
+              {/* Search */}
+              <div className="relative">
+                {searchOpen && (
+                  <input
+                    type="text"
+                    placeholder="Cari berita..."
+                    autoFocus
+                    className="absolute right-10 top-1/2 -translate-y-1/2 w-48 md:w-64 px-4 py-2 text-sm text-gray-800 placeholder:text-gray-400 outline-none bg-gray-100 border border-gray-300 rounded"
+                  />
+                )}
+                <button
+                  onClick={() => setSearchOpen(!searchOpen)}
+                  className="p-2 text-gray-500 hover:text-gray-900 transition-colors"
+                  aria-label="Search"
+                >
+                  <Search size={18} />
+                </button>
+              </div>
+              {/* Login */}
+              <a
+                href="/login"
+                className="hidden md:inline-flex px-5 py-1.5 text-sm font-semibold text-white bg-[#1a1a1a] hover:bg-[#333] transition-colors"
               >
-                <Search size={18} />
+                Masuk
+              </a>
+              {/* Mobile toggle */}
+              <button
+                className="md:hidden p-2 text-gray-600 hover:text-gray-900 transition-colors"
+                onClick={() => setMobileOpen(!mobileOpen)}
+                aria-label="Toggle menu"
+              >
+                {mobileOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
             </div>
-
-            {/* Login */}
-            <a
-              href="/login"
-              className="hidden md:inline-flex px-5 py-2 rounded-xl text-sm font-semibold text-white transition-all duration-300 hover:shadow-lg hover:scale-105"
-              style={{
-                background: "linear-gradient(135deg, #4dd0e1, #00897b)",
-                boxShadow: "0 4px 15px rgba(77, 208, 225, 0.25)",
-              }}
-            >
-              Masuk
-            </a>
-
-            {/* Mobile toggle */}
-            <button
-              className="md:hidden p-2 rounded-xl text-white/60 hover:text-white hover:bg-white/5 transition-all"
-              onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label="Toggle menu"
-            >
-              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
           </div>
+
+          {/* Masthead */}
+          <div className="text-center">
+            <a href="/">
+              <h1
+                className="text-5xl md:text-7xl font-black tracking-tight text-[#1a1a1a]"
+                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+              >
+                NewsTest
+              </h1>
+            </a>
+            <p className="text-[11px] tracking-[0.3em] uppercase text-gray-400 mt-1 font-sans">
+              Portal Berita Terpercaya
+            </p>
+          </div>
+        </div>
+
+        {/* Double rule */}
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="newspaper-double-rule" />
         </div>
       </div>
 
       {/* Category tabs — STICKY */}
       <nav
         className={`sticky top-0 z-50 border-b transition-all duration-300 ${
-          isScrolled 
-            ? "glass-category border-white/10 py-1" 
-            : "bg-transparent border-white/5 py-0"
+          isScrolled
+            ? "bg-white/95 backdrop-blur-sm shadow-sm border-gray-200"
+            : "bg-white border-gray-200"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4">
           {/* Desktop */}
-          <div className="hidden md:flex items-center gap-0 overflow-x-auto py-0">
+          <div className="hidden md:flex items-center gap-0 overflow-x-auto">
             {categories.map((cat, i) => (
               <a
                 key={cat}
                 href={i === 0 ? "/" : "#"}
-                className="relative px-5 py-3 text-sm font-medium whitespace-nowrap transition-all duration-300"
-                style={{
-                  color:
-                    i === 0 ? "#4dd0e1" : "rgba(255,255,255,0.5)",
-                  borderBottom:
-                    i === 0
-                      ? "2px solid #4dd0e1"
-                      : "2px solid transparent",
-                }}
-                onMouseEnter={(e) => {
-                  if (i !== 0) {
-                    e.currentTarget.style.color = "rgba(255,255,255,0.8)";
-                    e.currentTarget.style.borderBottomColor =
-                      "rgba(77, 208, 225, 0.3)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (i !== 0) {
-                    e.currentTarget.style.color = "rgba(255,255,255,0.5)";
-                    e.currentTarget.style.borderBottomColor = "transparent";
-                  }
-                }}
+                className={`relative px-4 py-3 text-[13px] font-semibold uppercase tracking-[0.08em] whitespace-nowrap transition-all duration-200 border-b-2 ${
+                  i === 0
+                    ? "text-[#c41e2f] border-[#c41e2f]"
+                    : "text-gray-600 border-transparent hover:text-[#1a1a1a] hover:border-gray-400"
+                }`}
+                style={{ fontFamily: "var(--font-geist-sans), sans-serif" }}
               >
                 {cat}
               </a>
@@ -156,15 +141,11 @@ export default function Navbar() {
                 <a
                   key={cat}
                   href={i === 0 ? "/" : "#"}
-                  className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300"
-                  style={{
-                    color:
-                      i === 0 ? "#4dd0e1" : "rgba(255,255,255,0.5)",
-                    background:
-                      i === 0
-                        ? "rgba(77, 208, 225, 0.1)"
-                        : "transparent",
-                  }}
+                  className={`px-4 py-2 text-sm font-semibold uppercase tracking-wider transition-colors ${
+                    i === 0
+                      ? "text-[#c41e2f] bg-red-50"
+                      : "text-gray-600 hover:text-[#1a1a1a]"
+                  }`}
                   onClick={() => setMobileOpen(false)}
                 >
                   {cat}
@@ -172,10 +153,7 @@ export default function Navbar() {
               ))}
               <a
                 href="/login"
-                className="w-full mt-2 text-center px-4 py-2.5 rounded-xl text-sm font-semibold text-white"
-                style={{
-                  background: "linear-gradient(135deg, #4dd0e1, #00897b)",
-                }}
+                className="w-full mt-2 text-center px-4 py-2.5 text-sm font-semibold text-white bg-[#1a1a1a]"
               >
                 Masuk
               </a>

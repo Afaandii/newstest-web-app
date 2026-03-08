@@ -9,6 +9,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-serif: var(--font-lora);
+  --font-display: var(--font-playfair);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -85,7 +86,6 @@
 
 .dark {
   --background: oklch(0.25 0.08 190);
-  /* Deep Aqua/Teal base */
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.18 0.03 255);
   --card-foreground: oklch(0.985 0 0);
@@ -118,7 +118,6 @@
   --sidebar-ring: oklch(0.588 0.158 241.966);
 }
 
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -130,87 +129,49 @@
 
   body {
     @apply bg-background text-foreground;
-    /* Overrides for Radix UI / Shadcn Select Scroll Lock */
     padding-right: 0 !important;
     overflow: auto !important;
     pointer-events: auto !important;
   }
 }
 
-/* ===== Glassmorphism Website Animations ===== */
-@keyframes float {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-12px);
-  }
-}
-
-@keyframes pulse-glow {
-
-  0%,
-  100% {
-    opacity: 1;
-    box-shadow: 0 0 8px #4dd0e1;
-  }
-
-  50% {
-    opacity: 0.6;
-    box-shadow: 0 0 16px #4dd0e1, 0 0 32px rgba(77, 208, 225, 0.3);
-  }
-}
-
-/* ===== Glassmorphism: Clear Water Effect ===== */
+/* ===== Newspaper Utilities ===== */
 @layer utilities {
-  .glass-water {
-    background: rgba(255, 255, 255, 0.05);
-    /* Slightly more opaque */
-    backdrop-filter: blur(24px);
-    /* Higher blur for better text isolation */
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    /* Sharper border */
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-  }
-
-  .glass-category {
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(20px) saturate(160%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
-  }
-
-  .glass-shine {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .glass-shine::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+  .newspaper-divider {
     height: 1px;
-    background: linear-gradient(to right,
-        transparent,
-        rgba(255, 255, 255, 0.4),
-        transparent);
-    z-index: 10;
-  }
-
-  .nyt-divider {
-    height: 1px;
-    background: linear-gradient(to right,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent);
+    background: #d4d4d4;
     margin: 1.5rem 0;
+  }
+
+  .newspaper-divider-thick {
+    height: 3px;
+    background: #1a1a1a;
+    margin: 0.5rem 0;
+  }
+
+  .newspaper-double-rule {
+    border: none;
+    border-top: 3px solid #1a1a1a;
+    border-bottom: 1px solid #1a1a1a;
+    height: 6px;
+  }
+
+  .newspaper-section-rule {
+    border: none;
+    border-top: 2px solid #1a1a1a;
+    height: 0;
+    margin: 0;
+  }
+
+  .drop-cap::first-letter {
+    float: left;
+    font-family: var(--font-playfair), serif;
+    font-size: 4.5rem;
+    line-height: 0.8;
+    padding-right: 0.5rem;
+    padding-top: 0.15rem;
+    font-weight: 700;
+    color: #1a1a1a;
   }
 }
 
@@ -229,6 +190,13 @@
   overflow: hidden;
 }
 
+.line-clamp-4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 /* Horizontal scrolling ticker */
 @keyframes scroll-left {
   0% {
@@ -240,15 +208,26 @@
   }
 }
 
-/* ===== FINAL OVERRIDES (MAX SPECIFICITY) ===== */
+/* Pulse animation for breaking badge */
+@keyframes pulse-badge {
 
-/* Smooth Scroll */
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* ===== FINAL OVERRIDES ===== */
 :root,
 html {
   scroll-behavior: smooth !important;
 }
 
-/* Custom Scrollbar Global Refinement (Shadcn Style) */
+/* Custom Scrollbar - Light Newspaper Theme */
 ::-webkit-scrollbar {
   width: 6px !important;
   height: 6px !important;
@@ -256,20 +235,20 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: #020817 !important;
+  background: #f0f0f0 !important;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155 !important;
+  background: #b0b0b0 !important;
   border-radius: 100px !important;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569 !important;
+  background: #888 !important;
 }
 
 /* Firefox */
 * {
   scrollbar-width: thin !important;
-  scrollbar-color: #334155 #020817 !important;
+  scrollbar-color: #b0b0b0 #f0f0f0 !important;
 }

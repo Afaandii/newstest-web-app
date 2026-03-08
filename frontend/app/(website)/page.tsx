@@ -8,31 +8,31 @@ export default function HomePage() {
 
   return (
     <>
-      <div className="relative min-h-screen bg-gradient-to-br from-[#00ffff]/10 via-[#081423] to-[#008b8b]/20" style={{ zIndex: 1 }}>
-        {/* Transparent background overlay for depth */}
-        <div className="fixed inset-0 bg-[#00ffff]/5 pointer-events-none" />
-
+      <div className="relative min-h-screen" style={{ background: "#f8f8f8", zIndex: 1 }}>
         <div className="relative max-w-7xl mx-auto">
           {/* === HERO: Featured + Sidebar === */}
           <HeroSection main={news[0]} sidebar={news[1]} />
 
           {/* === BREAKING NEWS TICKER === */}
-          <div className="px-4 py-4">
+          <div className="px-4 py-2">
             <BreakingNewsTicker />
           </div>
 
-          <div className="nyt-divider mx-4" />
+          {/* Divider */}
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="newspaper-divider" />
+          </div>
 
           {/* === NEWSPAPER GRID LAYOUT === */}
-          <main className="px-4 py-8 grid grid-cols-1 md:grid-cols-12 gap-8">
+          <main className="px-4 py-6 grid grid-cols-1 md:grid-cols-12 gap-8">
             {/* Left Column (Main Content) */}
-            <div className="md:col-span-9 space-y-16">
-              {/* Kabar Utama Section (Already exists but updated slice) */}
+            <div className="md:col-span-9 space-y-10">
+              {/* Kabar Utama Section */}
               <section>
                 <SectionHeader title="Kabar" highlight="Utama" />
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-white/5 border border-white/5 overflow-hidden">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-gray-200 border border-gray-200 overflow-hidden">
                   {news.slice(2, 6).map((article, i) => (
-                    <div key={article.id} className="bg-[#081423]">
+                    <div key={article.id} className="bg-white">
                       <NewsCard article={article} index={i} />
                     </div>
                   ))}
@@ -69,17 +69,20 @@ export default function HomePage() {
                 </div>
               </section>
 
-              {/* Berita Lainnya (Catch-all for remaining data) */}
+              {/* Berita Lainnya */}
               <section>
                 <SectionHeader title="Berita" highlight="Lainnya" />
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                  {news.slice(14, 32).map((article, i) => (
-                    <div key={article.id} className="group cursor-pointer">
-                      <p className="font-serif text-[10px] text-[#4dd0e1] uppercase font-bold">{article.category}</p>
-                      <h4 className="font-serif text-sm font-bold text-white mt-1 leading-tight group-hover:text-white/70 transition-colors line-clamp-2">
+                  {news.slice(14, 32).map((article) => (
+                    <div key={article.id} className="group cursor-pointer py-3 border-b border-gray-100">
+                      <p className="text-[10px] text-[#c41e2f] uppercase font-bold font-sans tracking-[0.1em]">{article.category}</p>
+                      <h4
+                        className="text-sm font-bold text-[#1a1a1a] mt-1 leading-tight group-hover:text-gray-500 transition-colors line-clamp-2"
+                        style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                      >
                         {article.title}
                       </h4>
-                      <p className="text-[10px] text-white/40 mt-2">{article.date}</p>
+                      <p className="text-[10px] text-gray-400 mt-2 font-sans">{article.date}</p>
                     </div>
                   ))}
                 </div>
@@ -87,22 +90,40 @@ export default function HomePage() {
             </div>
 
             {/* Right Column (Trending Sidebar) */}
-            <aside className="md:col-span-3">
-              <div className="sticky top-24 space-y-8">
+            <aside className="md:col-span-3 md:border-l border-gray-200 md:pl-6">
+              <div className="sticky top-16 space-y-6">
                 <div>
-                  <div className="border-b-2 border-white/10 pb-2 mb-6">
-                    <h4 className="font-serif text-sm font-bold uppercase tracking-[0.2em] text-white">Trending</h4>
+                  <div className="pb-2 mb-4">
+                    <h4
+                      className="text-sm font-bold uppercase tracking-[0.15em] text-[#1a1a1a] font-sans"
+                    >
+                      Trending
+                    </h4>
+                    <div className="newspaper-divider-thick mt-2" style={{ height: "2px" }} />
                   </div>
-                  <div className="space-y-6">
-                    {news.slice(9, 14).map((article) => (
+                  <div className="space-y-5">
+                    {news.slice(9, 14).map((article, i) => (
                       <article key={article.id} className="group cursor-pointer">
-                        <span className="font-serif text-[10px] font-bold text-[#4dd0e1] uppercase tracking-widest">
-                          {article.category}
-                        </span>
-                        <h4 className="font-serif text-base font-bold text-white leading-tight mt-1 group-hover:text-white/70 transition-colors">
-                          {article.title}
-                        </h4>
-                        <div className="nyt-divider my-4 opacity-30" />
+                        <div className="flex gap-3">
+                          <span
+                            className="text-3xl font-black text-gray-200 leading-none flex-shrink-0"
+                            style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                          >
+                            {String(i + 1).padStart(2, "0")}
+                          </span>
+                          <div>
+                            <span className="text-[10px] font-bold text-[#c41e2f] uppercase tracking-widest font-sans">
+                              {article.category}
+                            </span>
+                            <h4
+                              className="text-base font-bold text-[#1a1a1a] leading-tight mt-1 group-hover:text-gray-500 transition-colors"
+                              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                            >
+                              {article.title}
+                            </h4>
+                          </div>
+                        </div>
+                        <div className="newspaper-divider my-4" />
                       </article>
                     ))}
                   </div>
@@ -119,17 +140,15 @@ export default function HomePage() {
 /* ===== Section Header Component ===== */
 function SectionHeader({ title, highlight }: { title: string; highlight: string }) {
   return (
-    <div className="flex items-center gap-4 mb-8">
-      <h2 className="font-serif text-2xl md:text-3xl font-bold text-white/90 tracking-tight">
+    <div className="mb-6">
+      <div className="newspaper-section-rule mb-3" />
+      <h2
+        className="text-2xl md:text-3xl font-bold text-[#1a1a1a] tracking-tight"
+        style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+      >
         {title}{" "}
-        <span style={{ color: "#4dd0e1" }}>{highlight}</span>
+        <span className="text-[#c41e2f]">{highlight}</span>
       </h2>
-      <div
-        className="h-px flex-1"
-        style={{
-          background: "linear-gradient(to left, rgba(77, 208, 225, 0.25), transparent)",
-        }}
-      />
     </div>
   );
 }
