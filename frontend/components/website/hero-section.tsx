@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Clock } from "lucide-react";
 import type { NewsArticle } from "@/lib/dummy-news";
 
@@ -19,12 +20,14 @@ export default function HeroSection({ main, sidebar }: HeroSectionProps) {
                 <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#c41e2f] mb-3 block font-sans">
                   {main.category}
                 </span>
-                <h2
-                  className="text-3xl md:text-4xl lg:text-[2.75rem] font-bold text-[#1a1a1a] leading-[1.15] mb-5 group-hover:text-gray-700 transition-colors duration-300"
-                  style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-                >
-                  {main.title}
-                </h2>
+                <Link href={`/berita/${main.id}`}>
+                  <h2
+                    className="text-3xl md:text-4xl lg:text-[2.75rem] font-bold text-[#1a1a1a] leading-[1.15] mb-5 group-hover:text-gray-700 transition-colors duration-300 cursor-pointer"
+                    style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                  >
+                    {main.title}
+                  </h2>
+                </Link>
                 <p className="text-gray-600 text-base leading-relaxed mb-5 font-serif drop-cap">
                   {main.excerpt}
                 </p>
@@ -38,13 +41,13 @@ export default function HeroSection({ main, sidebar }: HeroSectionProps) {
               </div>
 
               {/* Image Side */}
-              <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
+              <Link href={`/berita/${main.id}`} className="relative aspect-[4/3] overflow-hidden bg-gray-100 block">
                 <img
                   src={main.imageUrl}
                   alt={main.title}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105"
                 />
-              </div>
+              </Link>
             </div>
           </article>
         </div>
@@ -62,12 +65,14 @@ export default function HeroSection({ main, sidebar }: HeroSectionProps) {
 
             {/* Sidebar Article */}
             <article className="group cursor-pointer">
-              <h3
-                className="text-xl font-bold text-[#1a1a1a] leading-snug mb-3 group-hover:text-gray-600 transition-colors"
-                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-              >
-                {sidebar.title}
-              </h3>
+              <Link href={`/berita/${sidebar.id}`}>
+                <h3
+                  className="text-xl font-bold text-[#1a1a1a] leading-snug mb-3 group-hover:text-gray-600 transition-colors"
+                  style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                >
+                  {sidebar.title}
+                </h3>
+              </Link>
               <p className="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-4 font-serif">
                 {sidebar.excerpt}
               </p>

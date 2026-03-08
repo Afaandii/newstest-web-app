@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getDummyNews } from "@/lib/dummy-news";
 import HeroSection from "@/components/website/hero-section";
 import BreakingNewsTicker from "@/components/website/breaking-ticker";
@@ -74,7 +75,11 @@ export default function HomePage() {
                 <SectionHeader title="Berita" highlight="Lainnya" />
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                   {news.slice(14, 32).map((article) => (
-                    <div key={article.id} className="group cursor-pointer py-3 border-b border-gray-100">
+                    <Link
+                      key={article.id}
+                      href={`/berita/${article.id}`}
+                      className="group cursor-pointer py-3 border-b border-gray-100 block"
+                    >
                       <p className="text-[10px] text-[#c41e2f] uppercase font-bold font-sans tracking-[0.1em]">{article.category}</p>
                       <h4
                         className="text-sm font-bold text-[#1a1a1a] mt-1 leading-tight group-hover:text-gray-500 transition-colors line-clamp-2"
@@ -83,7 +88,7 @@ export default function HomePage() {
                         {article.title}
                       </h4>
                       <p className="text-[10px] text-gray-400 mt-2 font-sans">{article.date}</p>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </section>
@@ -103,7 +108,11 @@ export default function HomePage() {
                   </div>
                   <div className="space-y-5">
                     {news.slice(9, 14).map((article, i) => (
-                      <article key={article.id} className="group cursor-pointer">
+                      <Link
+                        key={article.id}
+                        href={`/berita/${article.id}`}
+                        className="group block"
+                      >
                         <div className="flex gap-3">
                           <span
                             className="text-3xl font-black text-gray-200 leading-none flex-shrink-0"
@@ -124,7 +133,7 @@ export default function HomePage() {
                           </div>
                         </div>
                         <div className="newspaper-divider my-4" />
-                      </article>
+                      </Link>
                     ))}
                   </div>
                 </div>
