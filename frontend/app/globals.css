@@ -227,23 +227,37 @@ html {
   scroll-behavior: smooth !important;
 }
 
-/* Custom Scrollbar - Website (Newspaper Theme) */
-html:not(.admin-mode) ::-webkit-scrollbar {
+/* Custom Scrollbar - Website (Hidden but Scrollable) */
+/* Custom Scrollbar - Website (Hidden by Default to avoid flash) */
+html:not(.admin-mode),
+html:not(.admin-mode) body {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+html:not(.admin-mode)::-webkit-scrollbar,
+html:not(.admin-mode) body::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Base scrollbar for admin-mode to ensure it's always visible */
+.admin-mode::-webkit-scrollbar {
   width: 6px !important;
   height: 6px !important;
+  display: block !important;
 }
 
-html:not(.admin-mode) ::-webkit-scrollbar-track {
-  background: #f0f0f0 !important;
+.admin-mode::-webkit-scrollbar-track {
+  background: transparent !important;
 }
 
-html:not(.admin-mode) ::-webkit-scrollbar-thumb {
-  background: #b0b0b0 !important;
-  border-radius: 100px !important;
+.admin-mode::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 10px !important;
 }
 
-html:not(.admin-mode) ::-webkit-scrollbar-thumb:hover {
-  background: #888 !important;
+.admin-mode::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 /* ============================================================ */
