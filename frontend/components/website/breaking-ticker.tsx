@@ -10,27 +10,16 @@ const headlines = [
 
 export default function BreakingNewsTicker() {
   return (
-    <div className="max-w-7xl mx-auto px-4 py-4">
+    <div className="max-w-7xl mx-auto px-4 py-3">
       <div
-        className="flex items-center gap-4 px-5 py-3 overflow-hidden"
-        style={{
-          background: "rgba(77, 208, 225, 0.08)",
-          backdropFilter: "blur(16px)",
-          WebkitBackdropFilter: "blur(16px)",
-          borderRadius: "1rem",
-          border: "1px solid rgba(77, 208, 225, 0.12)",
-          boxShadow:
-            "0 4px 20px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(77, 208, 225, 0.06)",
-        }}
+        className="flex items-center gap-4 px-4 py-2.5 overflow-hidden border border-gray-200 bg-white"
       >
         {/* Badge */}
         <span
-          className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white"
+          className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white"
           style={{
-            background: "linear-gradient(135deg, #4dd0e1, #00897b)",
-            borderRadius: "0.6rem",
-            boxShadow: "0 2px 10px rgba(77, 208, 225, 0.3)",
-            animation: "pulse-glow 2.5s ease-in-out infinite",
+            background: "#c41e2f",
+            animation: "pulse-badge 2.5s ease-in-out infinite",
           }}
         >
           <Zap size={12} />
@@ -48,7 +37,7 @@ export default function BreakingNewsTicker() {
             {[...headlines, ...headlines].map((h, i) => (
               <span
                 key={i}
-                className="text-sm text-white/60 hover:text-[#4dd0e1] cursor-pointer transition-colors duration-300"
+                className="text-sm text-gray-700 hover:text-[#c41e2f] cursor-pointer transition-colors duration-300 font-sans"
               >
                 {h}
               </span>

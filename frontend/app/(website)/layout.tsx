@@ -10,8 +10,8 @@ export default function WebsiteLayout({
     <div
       className="min-h-screen flex flex-col"
       style={{
-        background:
-          "linear-gradient(160deg, #0a1628 0%, #0d2137 25%, #0a2a2a 50%, #0d1f35 75%, #0a1628 100%)",
+        background: "#f8f8f8",
+        color: "#1a1a1a",
       }}
     >
       <Navbar />
