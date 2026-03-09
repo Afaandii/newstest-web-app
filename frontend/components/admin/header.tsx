@@ -156,7 +156,7 @@ export function AdminHeader() {
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-9 px-2 gap-2 hover:bg-transparent cursor-pointer">
-              <Avatar className="h-8 w-12 shadow-sm">
+              <Avatar className="h-9 w-9 shadow-sm">
                 {user?.avatar && <AvatarImage src={user.avatar} alt={user.name} />}
                 <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
                   {user?.name ? user.name.substring(0, 2).toUpperCase() : ""}
