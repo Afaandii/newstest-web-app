@@ -10,7 +10,7 @@ export default function RoleCheck({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const roleId = localStorage.getItem("role_id");
 
-    if (!roleId || roleId !== "1") {
+    if (!roleId || (roleId !== "1" && roleId !== "3" && roleId !== "4")) {
       router.push("/");
     } else {
       setIsAuthorized(true);

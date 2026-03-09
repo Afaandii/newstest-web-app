@@ -82,7 +82,7 @@ export default function LoginPage() {
         localStorage.setItem("role_id", result.role_id.toString());
 
         // Redirect based on role
-        if (result.role_id === 1) {
+        if (result.role_id === 1 || result.role_id === 3 || result.role_id === 4) {
           router.push("/dashboard");
         } else {
           router.push("/");
