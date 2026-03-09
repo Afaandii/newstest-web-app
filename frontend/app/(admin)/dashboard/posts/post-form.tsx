@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { HiOutlinePhoto, HiOutlineXCircle } from "react-icons/hi2";
+import Cookies from "js-cookie";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -58,6 +59,34 @@ export function PostForm({ initialData, id }: PostFormProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(initialData?.thumbnail_url || null);
   const [fetchedCategories, setFetchedCategories] = useState<any[]>([]);
+  const [user, setUser] = useState<{ id: number; name: string } | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = Cookies.get("token");
+        if (!token) return;
+
+        const response = await fetch("http://localhost:8080/v1/auth/me", {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          setUser({
+            id: result.data.id_user,
+            name: result.data.name,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -86,8 +115,13 @@ export function PostForm({ initialData, id }: PostFormProps) {
 
   async function onSubmit(values: PostFormValues) {
     try {
+      if (!user) {
+        alert("User session not found. Please log in again.");
+        return;
+      }
+
       const formData = new FormData();
-      formData.append("user_id", "1"); // Hardcoded until auth is implemented
+      formData.append("user_id", user.id.toString());
       formData.append("category_id", values.category_id);
       formData.append("title", values.title);
       formData.append("excerpt", values.excerpt);

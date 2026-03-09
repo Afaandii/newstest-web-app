@@ -1,3 +1,4 @@
+"use client";
 import { use, useEffect, useState } from "react";
 import { Body } from "@/components/layout";
 import { Layout } from "@/components/layout";
