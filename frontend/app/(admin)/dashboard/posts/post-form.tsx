@@ -59,7 +59,7 @@ export function PostForm({ initialData, id }: PostFormProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(initialData?.thumbnail_url || null);
   const [fetchedCategories, setFetchedCategories] = useState<any[]>([]);
-  const [user, setUser] = useState<{ id: number; name: string } | null>(null);
+  const [user, setUser] = useState<{ id_user: number; name: string } | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -76,7 +76,7 @@ export function PostForm({ initialData, id }: PostFormProps) {
         if (response.ok) {
           const result = await response.json();
           setUser({
-            id: result.data.id_user,
+            id_user: result.data.id_user,
             name: result.data.name,
           });
         }
@@ -121,7 +121,7 @@ export function PostForm({ initialData, id }: PostFormProps) {
       }
 
       const formData = new FormData();
-      formData.append("user_id", user.id.toString());
+      formData.append("user_id", user.id_user.toString());
       formData.append("category_id", values.category_id);
       formData.append("title", values.title);
       formData.append("excerpt", values.excerpt);
