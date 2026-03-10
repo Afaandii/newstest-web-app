@@ -42,7 +42,7 @@ func (r *postRepository) Create(p *model.Post) error {
 }
 
 func (r *postRepository) Update(p *model.Post) error {
-	return r.db.Save(p).Error
+	return r.db.Omit("Category", "User").Save(p).Error
 }
 
 func (r *postRepository) Delete(id uint) error {
