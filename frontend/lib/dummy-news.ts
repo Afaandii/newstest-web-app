@@ -112,7 +112,7 @@ Ke depan, kolaborasi antara pemerintah, akademisi, dan sektor swasta menjadi san
       excerpt:
         "Ajang tahunan ini mempertemukan lebih dari 500 pelaku UMKM kuliner dari seluruh penjuru nusantara, menawarkan ragam sajian otentik yang memanjakan lidah.",
       content: generateContent("Ajang tahunan ini mempertemukan lebih dari 500 pelaku UMKM kuliner dari seluruh penjuru nusantara, menawarkan ragam sajian otentik yang memanjakan lidah."),
-      category: "Kuliner",
+      category: "Hiburan",
       author: "Chef Andi",
       date: "28 Feb 2026",
       imageUrl: "https://picsum.photos/seed/newsfood/800/500",
@@ -124,7 +124,7 @@ Ke depan, kolaborasi antara pemerintah, akademisi, dan sektor swasta menjadi san
       excerpt:
         "Platform belajar daring asal Indonesia berhasil meraih pendanaan dari investor global, membuktikan potensi besar pasar edukasi digital di Asia Tenggara.",
       content: generateContent("Platform belajar daring asal Indonesia berhasil meraih pendanaan dari investor global, membuktikan potensi besar pasar edukasi digital di Asia Tenggara."),
-      category: "Bisnis",
+      category: "Teknologi",
       author: "Rina Kartika",
       date: "27 Feb 2026",
       imageUrl: "https://picsum.photos/seed/newsstartup/800/500",
@@ -151,7 +151,7 @@ Ke depan, kolaborasi antara pemerintah, akademisi, dan sektor swasta menjadi san
       category: "Sains",
       author: "Prof. Hendra",
       date: "25 Feb 2026",
-      imageUrl: "https://picsum.photos/seed/newswater/800/500",
+      imageUrl: "https://picsum.photos/seed/newswatar/800/500",
       readTime: "5 menit",
     },
     {
@@ -172,7 +172,7 @@ Ke depan, kolaborasi antara pemerintah, akademisi, dan sektor swasta menjadi san
       excerpt:
         "Kementerian Pendidikan meluncurkan program beasiswa komprehensif yang menargetkan pelajar dari daerah 3T untuk melanjutkan pendidikan tinggi.",
       content: generateContent("Kementerian Pendidikan meluncurkan program beasiswa komprehensif yang menargetkan pelajar dari daerah 3T untuk melanjutkan pendidikan tinggi."),
-      category: "Pendidikan",
+      category: "Nasional",
       author: "Nurul Aini",
       date: "23 Feb 2026",
       imageUrl: "https://picsum.photos/seed/newsschool/800/500",
@@ -208,7 +208,7 @@ Ke depan, kolaborasi antara pemerintah, akademisi, dan sektor swasta menjadi san
       excerpt:
         "Produsen otomotif dalam negeri bersiap mengekspor unit kendaraan listrik pertamanya ke pasar mancanegara, menandai era baru industri otomotif Indonesia.",
       content: generateContent("Produsen otomotif dalam negeri bersiap mengekspor unit kendaraan listrik pertamanya ke pasar mancanegara, menandai era baru industri otomotif Indonesia."),
-      category: "Bisnis",
+      category: "Ekonomi",
       author: "Irwan Suwandi",
       date: "20 Feb 2026",
       imageUrl: "https://picsum.photos/seed/newsev/800/500",
@@ -220,7 +220,7 @@ Ke depan, kolaborasi antara pemerintah, akademisi, dan sektor swasta menjadi san
       excerpt:
         "Upaya restorasi hutan mangrove di pesisir utara Jawa membuahkan hasil positif dalam menekan laju abrasi dan memulihkan ekosistem pesisir.",
       content: generateContent("Upaya restorasi hutan mangrove di pesisir utara Jawa membuahkan hasil positif dalam menekan laju abrasi dan memulihkan ekosistem pesisir."),
-      category: "Lingkungan",
+      category: "Sains",
       author: "Lestari Wahyuni",
       date: "19 Feb 2026",
       imageUrl: "https://picsum.photos/seed/newsmangrove/800/500",
@@ -256,7 +256,7 @@ Ke depan, kolaborasi antara pemerintah, akademisi, dan sektor swasta menjadi san
       excerpt:
         "Para peneliti medis mengumumkan kemajuan signifikan dalam terapi gen yang mampu memperbaiki kerusakan genetik pada pasien dengan kondisi kesehatan langka.",
       content: generateContent("Para peneliti medis mengumumkan kemajuan signifikan dalam terapi gen yang mampu memperbaiki kerusakan genetik pada pasien dengan kondisi kesehatan langka."),
-      category: "Kesehatan",
+      category: "Sains",
       author: "Dr. Linda",
       date: "16 Feb 2026",
       imageUrl: "https://picsum.photos/seed/newsmed/800/500",
@@ -268,7 +268,7 @@ Ke depan, kolaborasi antara pemerintah, akademisi, dan sektor swasta menjadi san
       excerpt:
         "Konsep gedung hijau yang hemat energi dan menggunakan material berkelanjutan kini menjadi syarat wajib bagi setiap pembangunan properti baru di Jakarta.",
       content: generateContent("Konsep gedung hijau yang hemat energi dan menggunakan material berkelanjutan kini menjadi syarat wajib bagi setiap pembangunan properti baru di Jakarta."),
-      category: "Properti",
+      category: "Gaya Hidup",
       author: "Hendra Wijaya",
       date: "15 Feb 2026",
       imageUrl: "https://picsum.photos/seed/newsarch/800/500",
@@ -280,7 +280,7 @@ Ke depan, kolaborasi antara pemerintah, akademisi, dan sektor swasta menjadi san
       excerpt:
         "Pertunjukan wayang kulit klasik kini hadir dalam format streaming interaktif, menarik perhatian jutaan generasi muda untuk mengenal warisan budaya bangsa.",
       content: generateContent("Pertunjukan wayang kulit klasik kini hadir dalam format streaming interaktif, menarik perhatian jutaan generasi muda untuk mengenal warisan budaya bangsa."),
-      category: "Budaya",
+      category: "Hiburan",
       author: "Ki Bayu",
       date: "14 Feb 2026",
       imageUrl: "https://picsum.photos/seed/newswayang/800/500",
@@ -304,7 +304,7 @@ Ke depan, kolaborasi antara pemerintah, akademisi, dan sektor swasta menjadi san
       excerpt:
         "Penelitian terbaru menunjukkan korelasi kuat antara aktivitas fisik rutin dengan penurunan tingkat stres dan kecemasan di masa pasca-pandemi.",
       content: generateContent("Penelitian terbaru menunjukkan korelasi kuat antara aktivitas fisik rutin dengan penurunan tingkat stres dan kecemasan di masa pasca-pandemi."),
-      category: "Kesehatan",
+      category: "Olahraga",
       author: "Rendy Pratama",
       date: "12 Feb 2026",
       imageUrl: "https://picsum.photos/seed/newsmental/800/500",
@@ -328,7 +328,7 @@ Ke depan, kolaborasi antara pemerintah, akademisi, dan sektor swasta menjadi san
       excerpt:
         "Desainer busana muslim lokal terus menorehkan prestasi melalui pagelaran busana di Paris dan London, memperkuat posisi Indonesia sebagai pusat mode dunia.",
       content: generateContent("Desainer busana muslim lokal terus menorehkan prestasi melalui pagelaran busana di Paris dan London, memperkuat posisi Indonesia sebagai pusat mode dunia."),
-      category: "Fashion",
+      category: "Gaya Hidup",
       author: "Zaskia",
       date: "10 Feb 2026",
       imageUrl: "https://picsum.photos/seed/newsfashion/800/500",
@@ -340,7 +340,7 @@ Ke depan, kolaborasi antara pemerintah, akademisi, dan sektor swasta menjadi san
       excerpt:
         "Kurikulum baru mulai memperkenalkan dasar-dasar pemrograman dan robotika sederhana bagi siswa sekolah dasar untuk menghadapi persaingan di era digital.",
       content: generateContent("Kurikulum baru mulai memperkenalkan dasar-dasar pemrograman dan robotika sederhana bagi siswa sekolah dasar untuk menghadapi persaingan di era digital."),
-      category: "Pendidikan",
+      category: "Teknologi",
       author: "Budi Utomo",
       date: "09 Feb 2026",
       imageUrl: "https://picsum.photos/seed/newsrobot/800/500",
@@ -376,7 +376,7 @@ Ke depan, kolaborasi antara pemerintah, akademisi, dan sektor swasta menjadi san
       excerpt:
         "Ribuan relawan berpartisipasi dalam gerakan nasional bersih pantai untuk menanggulangi sampah plastik yang mencemari lautan nusantara.",
       content: generateContent("Ribuan relawan berpartisipasi dalam gerakan nasional bersih pantai untuk menanggulangi sampah plastik yang mencemari lautan nusantara."),
-      category: "Lingkungan",
+      category: "Nasional",
       author: "Fajar Ramadhan",
       date: "06 Feb 2026",
       imageUrl: "https://picsum.photos/seed/newsclean/800/500",
@@ -388,7 +388,7 @@ Ke depan, kolaborasi antara pemerintah, akademisi, dan sektor swasta menjadi san
       excerpt:
         "Ilmuwan farmasi berhasil mengembangkan vaksin multi-strain yang memberikan perlindungan lebih luas terhadap berbagai varian virus yang bermutasi.",
       content: generateContent("Ilmuwan farmasi berhasil mengembangkan vaksin multi-strain yang memberikan perlindungan lebih luas terhadap berbagai varian virus yang bermutasi."),
-      category: "Kesehatan",
+      category: "Nasional",
       author: "Dr. Gunawan",
       date: "05 Feb 2026",
       imageUrl: "https://picsum.photos/seed/newsvac/800/500",
@@ -400,7 +400,7 @@ Ke depan, kolaborasi antara pemerintah, akademisi, dan sektor swasta menjadi san
       excerpt:
         "Perusahaan teknologi keuangan asal Indonesia resmi menyandang status unicorn setelah mendapatkan suntikan dana segar dari konsorsium investor global.",
       content: generateContent("Perusahaan teknologi keuangan asal Indonesia resmi menyandang status unicorn setelah mendapatkan suntikan dana segar dari konsorsium investor global."),
-      category: "Bisnis",
+      category: "Ekonomi",
       author: "Kevin Sanjaya",
       date: "04 Feb 2026",
       imageUrl: "https://picsum.photos/seed/newsfin/800/500",
@@ -412,7 +412,7 @@ Ke depan, kolaborasi antara pemerintah, akademisi, dan sektor swasta menjadi san
       excerpt:
         "Pemasangan panel surya di atap pabrik-pabrik besar mulai diimplementasikan untuk mengurangi ketergantungan pada energi fosil dan menekan emisi gas rumah kaca.",
       content: generateContent("Pemasangan panel surya di atap pabrik-pabrik besar mulai diimplementasikan untuk mengurangi ketergantungan pada energi fosil dan menekan emisi gas rumah kaca."),
-      category: "Energi",
+      category: "Sains",
       author: "Taufik Hidayat",
       date: "03 Feb 2026",
       imageUrl: "https://picsum.photos/seed/newssolar/800/500",

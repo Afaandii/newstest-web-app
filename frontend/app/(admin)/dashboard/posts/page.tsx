@@ -168,7 +168,7 @@ export default function PostsPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="hidden lg:table-cell text-muted-foreground">
-                        {post.User?.username || "Admin"}
+                        {post.User?.name || "-"}
                       </TableCell>
                       <TableCell className="hidden sm:table-cell text-muted-foreground text-sm">
                         {new Date(post.created_at).toLocaleDateString()}

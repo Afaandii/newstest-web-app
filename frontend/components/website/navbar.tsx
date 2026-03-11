@@ -2,16 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { Search, Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 const categories = [
-  "Beranda",
-  "Nasional",
-  "Ekonomi",
-  "Teknologi",
-  "Olahraga",
-  "Hiburan",
-  "Sains",
-  "Gaya Hidup",
+  { name: "Beranda", slug: "/" },
+  { name: "Nasional", slug: "nasional" },
+  { name: "Ekonomi", slug: "ekonomi" },
+  { name: "Teknologi", slug: "teknologi" },
+  { name: "Olahraga", slug: "olahraga" },
+  { name: "Hiburan", slug: "hiburan" },
+  { name: "Sains", slug: "sains" },
+  { name: "Gaya Hidup", slug: "gaya-hidup" },
 ];
 
 function getFormattedDate() {
@@ -25,6 +26,7 @@ function getFormattedDate() {
 }
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -118,39 +120,51 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4">
           {/* Desktop */}
           <div className="hidden md:flex items-center gap-0 overflow-x-auto">
-            {categories.map((cat, i) => (
-              <a
-                key={cat}
-                href={i === 0 ? "/" : "#"}
-                className={`relative px-4 py-3 text-[13px] font-semibold uppercase tracking-[0.08em] whitespace-nowrap transition-all duration-200 border-b-2 ${
-                  i === 0
-                    ? "text-[#c41e2f] border-[#c41e2f]"
-                    : "text-gray-600 border-transparent hover:text-[#1a1a1a] hover:border-gray-400"
-                }`}
-                style={{ fontFamily: "var(--font-geist-sans), sans-serif" }}
-              >
-                {cat}
-              </a>
-            ))}
+            {categories.map((cat) => {
+              const isActive = 
+                (cat.slug === "/" && pathname === "/") || 
+                (cat.slug !== "/" && pathname === `/kategori/${cat.slug}`);
+                
+              return (
+                <a
+                  key={cat.name}
+                  href={cat.slug === "/" ? "/" : `/kategori/${cat.slug}`}
+                  className={`relative px-4 py-3 text-[13px] font-semibold uppercase tracking-[0.08em] whitespace-nowrap transition-all duration-200 border-b-2 ${
+                    isActive
+                      ? "text-[#c41e2f] border-[#c41e2f]"
+                      : "text-gray-600 border-transparent hover:text-[#1a1a1a] hover:border-gray-400"
+                  }`}
+                  style={{ fontFamily: "var(--font-geist-sans), sans-serif" }}
+                >
+                  {cat.name}
+                </a>
+              );
+            })}
           </div>
 
           {/* Mobile dropdown */}
           {mobileOpen && (
             <div className="md:hidden py-3 flex flex-wrap gap-1">
-              {categories.map((cat, i) => (
-                <a
-                  key={cat}
-                  href={i === 0 ? "/" : "#"}
-                  className={`px-4 py-2 text-sm font-semibold uppercase tracking-wider transition-colors ${
-                    i === 0
-                      ? "text-[#c41e2f] bg-red-50"
-                      : "text-gray-600 hover:text-[#1a1a1a]"
-                  }`}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {cat}
-                </a>
-              ))}
+              {categories.map((cat) => {
+                const isActive = 
+                  (cat.slug === "/" && pathname === "/") || 
+                  (cat.slug !== "/" && pathname === `/kategori/${cat.slug}`);
+
+                return (
+                  <a
+                    key={cat.name}
+                    href={cat.slug === "/" ? "/" : `/kategori/${cat.slug}`}
+                    className={`px-4 py-2 text-sm font-semibold uppercase tracking-wider transition-colors ${
+                      isActive
+                        ? "text-[#c41e2f] bg-red-50"
+                        : "text-gray-600 hover:text-[#1a1a1a]"
+                    }`}
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {cat.name}
+                  </a>
+                );
+              })}
               <a
                 href="/login"
                 className="w-full mt-2 text-center px-4 py-2.5 text-sm font-semibold text-white bg-[#1a1a1a]"

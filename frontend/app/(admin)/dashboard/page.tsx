@@ -218,7 +218,6 @@ export default function DashboardPage() {
                     <TableHead className="w-[300px]">Article Title</TableHead>
                     <TableHead>Author</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Views</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -233,9 +232,6 @@ export default function DashboardPage() {
                           <Badge variant="default" className="px-2 py-0 border-none">
                             Published
                           </Badge>
-                        </TableCell>
-                        <TableCell className="text-right font-mono text-sm leading-none">
-                          0
                         </TableCell>
                       </TableRow>
                     ))
