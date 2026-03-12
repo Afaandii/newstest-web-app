@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { Clock } from "lucide-react";
-import type { NewsArticle } from "@/lib/dummy-news";
+import type { Post } from "@/lib/news";
 
 interface NewsCardProps {
-  article: NewsArticle;
+  article: Post;
   index?: number;
   variant?: "default" | "wide" | "compact";
 }
@@ -19,14 +18,14 @@ export default function NewsCard({ article, index = 0, variant = "default" }: Ne
 }
 
 /* ========== Default Card ========== */
-function DefaultCard({ article }: { article: NewsArticle; index: number }) {
+function DefaultCard({ article }: { article: Post; index: number }) {
   return (
-    <Link href={`/berita/${article.id}`} className="block">
+    <Link href={`/berita/${article.id_post}`} className="block">
       <article className="group flex flex-col p-5 bg-white border-b border-gray-200 transition-colors duration-300 hover:bg-gray-50 h-full">
         <div className="flex flex-col h-full">
           {/* Category */}
           <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#c41e2f] mb-2 font-sans">
-            {article.category}
+            {article.Category?.name || "News"}
           </span>
 
           {/* Headline */}
@@ -40,7 +39,7 @@ function DefaultCard({ article }: { article: NewsArticle; index: number }) {
           {/* Image */}
           <div className="relative aspect-video overflow-hidden mb-4 bg-gray-100">
             <img
-              src={article.imageUrl}
+              src={article.thumbnail || "/placeholder-news.jpg"}
               alt={article.title}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
@@ -53,11 +52,7 @@ function DefaultCard({ article }: { article: NewsArticle; index: number }) {
 
           {/* Footer */}
           <div className="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between text-[11px] font-sans uppercase tracking-widest text-gray-400">
-            <span className="font-bold text-gray-600">{article.author}</span>
-            <div className="flex items-center gap-2">
-              <Clock size={10} />
-              <span>{article.readTime}</span>
-            </div>
+            <span className="font-bold text-gray-600">{article.User?.name || ""}</span>
           </div>
         </div>
       </article>
@@ -66,13 +61,13 @@ function DefaultCard({ article }: { article: NewsArticle; index: number }) {
 }
 
 /* ========== Wide Card ========== */
-function WideCard({ article }: { article: NewsArticle; index: number }) {
+function WideCard({ article }: { article: Post; index: number }) {
   return (
-    <Link href={`/berita/${article.id}`} className="block">
+    <Link href={`/berita/${article.id_post}`} className="block">
       <article className="group relative cursor-pointer bg-white border border-gray-200 transition-all duration-300 hover:shadow-md overflow-hidden">
         <div className="relative h-56 overflow-hidden">
           <img
-            src={article.imageUrl}
+            src={article.thumbnail || "/placeholder-news.jpg"}
             alt={article.title}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
@@ -85,7 +80,7 @@ function WideCard({ article }: { article: NewsArticle; index: number }) {
           />
           <div className="absolute top-3 left-3">
             <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-white bg-[#c41e2f]">
-              {article.category}
+              {article.Category?.name || "News"}
             </span>
           </div>
           <div className="absolute bottom-0 left-0 right-0 p-5">
@@ -103,11 +98,11 @@ function WideCard({ article }: { article: NewsArticle; index: number }) {
         <div className="p-4 flex items-center justify-between text-[11px] text-gray-400 font-sans bg-white">
           <div className="flex items-center gap-1.5">
             <div className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold text-white bg-[#1a1a1a]">
-              {article.author.charAt(0)}
+              {(article.User?.name || "A").charAt(0)}
             </div>
-            <span className="text-gray-600">{article.author}</span>
+            <span className="text-gray-600">{article.User?.name || ""}</span>
           </div>
-          <span>{article.date}</span>
+          <span>{new Date(article.created_at).toLocaleDateString("id-ID", { day: 'numeric', month: 'long', year: 'numeric' })}</span>
         </div>
       </article>
     </Link>
@@ -115,20 +110,20 @@ function WideCard({ article }: { article: NewsArticle; index: number }) {
 }
 
 /* ========== Compact Card (horizontal) ========== */
-function CompactCard({ article }: { article: NewsArticle }) {
+function CompactCard({ article }: { article: Post }) {
   return (
-    <Link href={`/berita/${article.id}`} className="block">
+    <Link href={`/berita/${article.id_post}`} className="block">
       <article className="group flex gap-4 cursor-pointer transition-colors duration-300 p-3 border-b border-gray-100 hover:bg-gray-50">
         <div className="flex-shrink-0 w-20 h-20 overflow-hidden bg-gray-100">
           <img
-            src={article.imageUrl}
+            src={article.thumbnail || "/placeholder-news.jpg"}
             alt={article.title}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
         </div>
         <div className="flex-1 min-w-0">
           <span className="text-[10px] font-bold uppercase tracking-widest text-[#c41e2f] font-sans">
-            {article.category}
+            {article.Category?.name || "News"}
           </span>
           <h4
             className="text-sm font-semibold text-[#1a1a1a] leading-snug mt-0.5 line-clamp-2 group-hover:text-gray-600 transition-colors duration-300"
@@ -136,7 +131,9 @@ function CompactCard({ article }: { article: NewsArticle }) {
           >
             {article.title}
           </h4>
-          <span className="text-[10px] text-gray-400 mt-1 block font-sans">{article.date}</span>
+          <span className="text-[10px] text-gray-400 mt-1 block font-sans">
+            {new Date(article.created_at).toLocaleDateString("id-ID", { day: 'numeric', month: 'short', year: 'numeric' })}
+          </span>
         </div>
       </article>
     </Link>

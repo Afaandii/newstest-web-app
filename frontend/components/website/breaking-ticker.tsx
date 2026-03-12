@@ -1,14 +1,17 @@
 import { Zap } from "lucide-react";
 
-const headlines = [
-  "Harga Emas Dunia Tembus Rekor Tertinggi Sepanjang Masa",
-  "Gempa M5.2 Guncang Sulawesi, Tidak Berpotensi Tsunami",
-  "Menteri Pendidikan Umumkan Kurikulum Baru Berbasis AI",
-  "SpaceX Berhasil Luncurkan Misi ke Mars untuk Pertama Kali",
-  "Rupiah Menguat Signifikan di Tengah Stabilitas Ekonomi Global",
+interface BreakingNewsTickerProps {
+  headlines?: string[];
+}
+
+const defaultHeadlines = [
+  "NewsTest: Melayani Informasi Terpercaya Setiap Saat",
+  "Dapatkan Berita Terupdate di Seluruh Penjuru Dunia",
 ];
 
-export default function BreakingNewsTicker() {
+export default function BreakingNewsTicker({ headlines = defaultHeadlines }: BreakingNewsTickerProps) {
+  const displayHeadlines = headlines.length > 0 ? headlines : defaultHeadlines;
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-3">
       <div
@@ -31,10 +34,10 @@ export default function BreakingNewsTicker() {
           <div
             className="flex gap-12 whitespace-nowrap"
             style={{
-              animation: "scroll-left 30s linear infinite",
+              animation: "scroll-left 40s linear infinite",
             }}
           >
-            {[...headlines, ...headlines].map((h, i) => (
+            {[...displayHeadlines, ...displayHeadlines].map((h, i) => (
               <span
                 key={i}
                 className="text-sm text-gray-700 hover:text-[#c41e2f] cursor-pointer transition-colors duration-300 font-sans"

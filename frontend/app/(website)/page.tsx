@@ -1,22 +1,38 @@
 import Link from "next/link";
-import { getDummyNews } from "@/lib/dummy-news";
+import { getPosts } from "@/lib/news";
 import HeroSection from "@/components/website/hero-section";
 import BreakingNewsTicker from "@/components/website/breaking-ticker";
 import NewsCard from "@/components/website/news-card";
 
-export default function HomePage() {
-  const news = getDummyNews();
+export default async function HomePage() {
+  const news = await getPosts();
+
+  // If no news at all, show a simple message
+  if (news.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#f8f8f8]">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-400">Belum ada berita hari ini.</h2>
+          <p className="text-gray-500 mt-2">Silakan hubungi admin atau kembali lagi nanti.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Helper to filter news by category name (backend matching)
+  const getByCategory = (names: string[]) => 
+    news.filter(a => names.includes(a.Category?.name));
 
   return (
     <>
       <div className="relative min-h-screen" style={{ background: "#f8f8f8", zIndex: 1 }}>
         <div className="relative max-w-7xl mx-auto">
           {/* === HERO: Featured + Sidebar === */}
-          <HeroSection main={news[0]} sidebar={news[1]} />
+          <HeroSection main={news[0]} sidebar={news[1] || news[0]} />
 
           {/* === BREAKING NEWS TICKER === */}
           <div className="px-4 py-2">
-            <BreakingNewsTicker />
+            <BreakingNewsTicker headlines={news.slice(0, 10).map(n => n.title)} />
           </div>
 
           {/* Divider */}
@@ -33,7 +49,7 @@ export default function HomePage() {
                 <SectionHeader title="Kabar" highlight="Utama" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-gray-200 border border-gray-200 overflow-hidden">
                   {news.slice(2, 6).map((article, i) => (
-                    <div key={article.id} className="bg-white">
+                    <div key={article.id_post} className="bg-white">
                       <NewsCard article={article} index={i} />
                     </div>
                   ))}
@@ -44,8 +60,8 @@ export default function HomePage() {
               <section>
                 <SectionHeader title="Bisnis &" highlight="Ekonomi" />
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                  {news.filter(a => a.category === "Bisnis" || a.category === "Ekonomi").slice(0, 3).map((article, i) => (
-                    <NewsCard key={article.id} article={article} index={i} />
+                  {getByCategory(["Bisnis", "Ekonomi"]).slice(0, 3).map((article, i) => (
+                    <NewsCard key={article.id_post} article={article} index={i} />
                   ))}
                 </div>
               </section>
@@ -54,8 +70,8 @@ export default function HomePage() {
               <section>
                 <SectionHeader title="Sains &" highlight="Teknologi" />
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                  {news.filter(a => a.category === "Sains" || a.category === "Teknologi").slice(1, 4).map((article, i) => (
-                    <NewsCard key={article.id} article={article} index={i} />
+                  {getByCategory(["Sains", "Teknologi"]).slice(0, 3).map((article, i) => (
+                    <NewsCard key={article.id_post} article={article} index={i} />
                   ))}
                 </div>
               </section>
@@ -64,8 +80,8 @@ export default function HomePage() {
               <section>
                 <SectionHeader title="Gaya Hidup &" highlight="Hiburan" />
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                  {news.filter(a => a.category === "Gaya Hidup" || a.category === "Hiburan").map((article, i) => (
-                    <NewsCard key={article.id} article={article} index={i} />
+                  {getByCategory(["Gaya Hidup", "Hiburan"]).slice(0, 3).map((article, i) => (
+                    <NewsCard key={article.id_post} article={article} index={i} />
                   ))}
                 </div>
               </section>
@@ -74,20 +90,24 @@ export default function HomePage() {
               <section>
                 <SectionHeader title="Berita" highlight="Lainnya" />
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                  {news.slice(14, 32).map((article) => (
+                  {news.slice(6, 22).map((article) => (
                     <Link
-                      key={article.id}
-                      href={`/berita/${article.id}`}
+                      key={article.id_post}
+                      href={`/berita/${article.id_post}`}
                       className="group cursor-pointer py-3 border-b border-gray-100 block"
                     >
-                      <p className="text-[10px] text-[#c41e2f] uppercase font-bold font-sans tracking-[0.1em]">{article.category}</p>
+                      <p className="text-[10px] text-[#c41e2f] uppercase font-bold font-sans tracking-[0.1em]">
+                        {article.Category?.name || "News"}
+                      </p>
                       <h4
                         className="text-sm font-bold text-[#1a1a1a] mt-1 leading-tight group-hover:text-gray-500 transition-colors line-clamp-2"
                         style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
                       >
                         {article.title}
                       </h4>
-                      <p className="text-[10px] text-gray-400 mt-2 font-sans">{article.date}</p>
+                      <p className="text-[10px] text-gray-400 mt-2 font-sans">
+                        {new Date(article.created_at).toLocaleDateString("id-ID")}
+                      </p>
                     </Link>
                   ))}
                 </div>
@@ -107,10 +127,10 @@ export default function HomePage() {
                     <div className="newspaper-divider-thick mt-2" style={{ height: "2px" }} />
                   </div>
                   <div className="space-y-5">
-                    {news.slice(9, 14).map((article, i) => (
+                    {news.slice(0, 5).map((article, i) => (
                       <Link
-                        key={article.id}
-                        href={`/berita/${article.id}`}
+                        key={article.id_post}
+                        href={`/berita/${article.id_post}`}
                         className="group block"
                       >
                         <div className="flex gap-3">
@@ -122,7 +142,7 @@ export default function HomePage() {
                           </span>
                           <div>
                             <span className="text-[10px] font-bold text-[#c41e2f] uppercase tracking-widest font-sans">
-                              {article.category}
+                              {article.Category?.name || "News"}
                             </span>
                             <h4
                               className="text-base font-bold text-[#1a1a1a] leading-tight mt-1 group-hover:text-gray-500 transition-colors"

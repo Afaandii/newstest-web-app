@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { getDummyNews } from "@/lib/dummy-news";
+import { getPosts } from "@/lib/news";
 import HeroSection from "@/components/website/hero-section";
 import BreakingNewsTicker from "@/components/website/breaking-ticker";
 import NewsCard from "@/components/website/news-card";
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
-  const news = getDummyNews();
+  const news = await getPosts();
   const { slug } = await params;
 
   // Map slug back to category name
@@ -21,7 +21,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
   const categoryName = categoryMap[slug] || slug.charAt(0).toUpperCase() + slug.slice(1);
   const filteredNews = news.filter(
-    (a) => a.category.toLowerCase() === categoryName.toLowerCase()
+    (a) => a.Category?.name.toLowerCase() === categoryName.toLowerCase()
   );
 
   // If no news, show empty state
@@ -50,7 +50,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
           {/* === BREAKING NEWS TICKER === */}
           <div className="px-4 py-2">
-            <BreakingNewsTicker />
+            <BreakingNewsTicker headlines={news.slice(0, 10).map(n => n.title)} />
           </div>
 
           {/* Divider */}
@@ -66,7 +66,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
                 <SectionHeader title={categoryName} highlight="Terkini" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredNews.slice(2).map((article, i) => (
-                    <NewsCard key={article.id} article={article} index={i} />
+                    <NewsCard key={article.id_post} article={article} index={i} />
                   ))}
                   {filteredNews.length <= 2 && (
                     <div className="col-span-full py-10 text-center text-gray-400 italic">
@@ -89,14 +89,14 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
                   </div>
                   <div className="space-y-5">
                     {news.slice(0, 5).map((article, i) => (
-                      <Link key={article.id} href={`/berita/${article.id}`} className="group block">
+                      <Link key={article.id_post} href={`/berita/${article.id_post}`} className="group block">
                         <div className="flex gap-3">
                           <span className="text-3xl font-black text-gray-200 leading-none flex-shrink-0" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
                             {String(i + 1).padStart(2, "0")}
                           </span>
                           <div>
                             <span className="text-[10px] font-bold text-[#c41e2f] uppercase tracking-widest font-sans">
-                              {article.category}
+                              {article.Category?.name || "News"}
                             </span>
                             <h4 className="text-base font-bold text-[#1a1a1a] leading-tight mt-1 group-hover:text-gray-500 transition-colors" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
                               {article.title}

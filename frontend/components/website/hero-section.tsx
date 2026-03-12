@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { Clock } from "lucide-react";
-import type { NewsArticle } from "@/lib/dummy-news";
+import type { Post } from "@/lib/news";
 
 interface HeroSectionProps {
-  main: NewsArticle;
-  sidebar: NewsArticle;
+  main: Post;
+  sidebar: Post;
 }
 
 export default function HeroSection({ main, sidebar }: HeroSectionProps) {
@@ -18,9 +17,9 @@ export default function HeroSection({ main, sidebar }: HeroSectionProps) {
               {/* Text Side */}
               <div className="flex flex-col justify-center">
                 <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#c41e2f] mb-3 block font-sans">
-                  {main.category}
+                  {main.Category?.name || "News"}
                 </span>
-                <Link href={`/berita/${main.id}`}>
+                <Link href={`/berita/${main.id_post}`}>
                   <h2
                     className="text-3xl md:text-4xl lg:text-[2.75rem] font-bold text-[#1a1a1a] leading-[1.15] mb-5 group-hover:text-gray-700 transition-colors duration-300 cursor-pointer"
                     style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
@@ -32,18 +31,14 @@ export default function HeroSection({ main, sidebar }: HeroSectionProps) {
                   {main.excerpt}
                 </p>
                 <div className="flex items-center gap-4 text-xs font-sans uppercase tracking-widest text-gray-400">
-                  <span className="font-bold text-gray-600">{main.author}</span>
-                  <div className="flex items-center gap-2">
-                    <Clock size={12} />
-                    <span>{main.readTime}</span>
-                  </div>
+                  <span className="font-bold text-gray-600">{main.User?.name || ""}</span>
                 </div>
               </div>
 
               {/* Image Side */}
-              <Link href={`/berita/${main.id}`} className="relative aspect-[4/3] overflow-hidden bg-gray-100 block">
+              <Link href={`/berita/${main.id_post}`} className="relative aspect-[4/3] overflow-hidden bg-gray-100 block">
                 <img
-                  src={main.imageUrl}
+                  src={main.thumbnail || "/placeholder-news.jpg"}
                   alt={main.title}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105"
                 />
@@ -65,7 +60,7 @@ export default function HeroSection({ main, sidebar }: HeroSectionProps) {
 
             {/* Sidebar Article */}
             <article className="group cursor-pointer">
-              <Link href={`/berita/${sidebar.id}`}>
+              <Link href={`/berita/${sidebar.id_post}`}>
                 <h3
                   className="text-xl font-bold text-[#1a1a1a] leading-snug mb-3 group-hover:text-gray-600 transition-colors"
                   style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
@@ -77,7 +72,7 @@ export default function HeroSection({ main, sidebar }: HeroSectionProps) {
                 {sidebar.excerpt}
               </p>
               <div className="text-[10px] font-sans uppercase tracking-[0.2em] text-gray-400">
-                {sidebar.author} • {sidebar.readTime}
+                {sidebar.User?.name || "Admin"}
               </div>
             </article>
             <div className="newspaper-divider" />
