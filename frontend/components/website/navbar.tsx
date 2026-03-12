@@ -1,19 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Search, Menu, X } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Search, Menu, X, ChevronRight, ChevronLeft } from "lucide-react";
 import { usePathname } from "next/navigation";
-
-const categories = [
-  { name: "Beranda", slug: "/" },
-  { name: "Nasional", slug: "nasional" },
-  { name: "Ekonomi", slug: "ekonomi" },
-  { name: "Teknologi", slug: "teknologi" },
-  { name: "Olahraga", slug: "olahraga" },
-  { name: "Hiburan", slug: "hiburan" },
-  { name: "Sains", slug: "sains" },
-  { name: "Gaya Hidup", slug: "gaya-hidup" },
-];
+import { getCategories, type Category } from "@/lib/news";
 
 function getFormattedDate() {
   const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
@@ -30,20 +20,58 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [categories, setCategories] = useState<{ name: string; slug: string }[]>([]);
+  
+  // Scroll arrow logic
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(false);
+
+  const checkScroll = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setShowLeftArrow(scrollLeft > 0);
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1);
+    }
+  };
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const scrollAmount = 200;
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
 
   useEffect(() => {
-    const handleScroll = () => {
+    const fetchCats = async () => {
+      const data = await getCategories();
+      const mapped = data.map(c => ({ name: c.name, slug: c.slug }));
+      setCategories([{ name: "Beranda", slug: "/" }, ...mapped]);
+      // Small timeout to ensure DOM is updated before checking scroll
+      setTimeout(checkScroll, 100);
+    };
+    fetchCats();
+
+    const handleWindowScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    
+    window.addEventListener("scroll", handleWindowScroll);
+    window.addEventListener("resize", checkScroll);
+    
+    return () => {
+      window.removeEventListener("scroll", handleWindowScroll);
+      window.removeEventListener("resize", checkScroll);
+    };
   }, []);
 
   return (
     <>
       {/* Top bar — Masthead — SCROLLS AWAY */}
       <div className="relative z-[60] bg-white">
-
         <div className="max-w-7xl mx-auto px-4 py-5">
           {/* Date row */}
           <div className="flex items-center justify-between mb-3">
@@ -51,7 +79,6 @@ export default function Navbar() {
               {getFormattedDate()}
             </p>
             <div className="flex items-center gap-2">
-              {/* Search */}
               <div className="relative">
                 {searchOpen && (
                   <input
@@ -69,14 +96,12 @@ export default function Navbar() {
                   <Search size={18} />
                 </button>
               </div>
-              {/* Login */}
               <a
                 href="/login"
                 className="hidden md:inline-flex px-5 py-1.5 text-sm font-semibold text-white bg-[#1a1a1a] hover:bg-[#333] transition-colors"
               >
                 Masuk
               </a>
-              {/* Mobile toggle */}
               <button
                 className="md:hidden p-2 text-gray-600 hover:text-gray-900 transition-colors"
                 onClick={() => setMobileOpen(!mobileOpen)}
@@ -103,7 +128,6 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Double rule */}
         <div className="max-w-7xl mx-auto px-4">
           <div className="newspaper-double-rule" />
         </div>
@@ -117,34 +141,67 @@ export default function Navbar() {
             : "bg-white border-gray-200"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4">
-          {/* Desktop */}
-          <div className="hidden md:flex items-center gap-0 overflow-x-auto">
-            {categories.map((cat) => {
-              const isActive = 
-                (cat.slug === "/" && pathname === "/") || 
-                (cat.slug !== "/" && pathname === `/kategori/${cat.slug}`);
-                
-              return (
-                <a
-                  key={cat.name}
-                  href={cat.slug === "/" ? "/" : `/kategori/${cat.slug}`}
-                  className={`relative px-4 py-3 text-[13px] font-semibold uppercase tracking-[0.08em] whitespace-nowrap transition-all duration-200 border-b-2 ${
-                    isActive
-                      ? "text-[#c41e2f] border-[#c41e2f]"
-                      : "text-gray-600 border-transparent hover:text-[#1a1a1a] hover:border-gray-400"
-                  }`}
-                  style={{ fontFamily: "var(--font-geist-sans), sans-serif" }}
-                >
-                  {cat.name}
-                </a>
-              );
-            })}
+        <div className="max-w-7xl mx-auto px-4 relative group">
+          {/* Desktop Categories — SCROLLABLE */}
+          <div className="hidden md:block relative overflow-hidden">
+            {/* Left Arrow */}
+            {showLeftArrow && (
+              <button 
+                onClick={() => scroll("left")}
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-1.5 bg-white/90 border border-gray-200 shadow-sm text-[#1a1a1a] hover:text-[#c41e2f] transition-all"
+                aria-label="Scroll left"
+              >
+                <ChevronLeft size={16} />
+              </button>
+            )}
+
+            <div 
+              ref={scrollRef}
+              onScroll={checkScroll}
+              className="flex items-center gap-0 overflow-x-auto no-scrollbar scroll-smooth"
+              id="category-scroll-container"
+            >
+              {categories.map((cat) => {
+                const isActive = 
+                  (cat.slug === "/" && pathname === "/") || 
+                  (cat.slug !== "/" && pathname === `/kategori/${cat.slug}`);
+                  
+                return (
+                  <a
+                    key={cat.name}
+                    href={cat.slug === "/" ? "/" : `/kategori/${cat.slug}`}
+                    className={`relative px-4 py-3 text-[13px] font-semibold uppercase tracking-[0.08em] whitespace-nowrap transition-all duration-200 border-b-2 flex-shrink-0 ${
+                      isActive
+                        ? "text-[#c41e2f] border-[#c41e2f]"
+                        : "text-gray-600 border-transparent hover:text-[#1a1a1a] hover:border-gray-400"
+                    }`}
+                    style={{ fontFamily: "var(--font-geist-sans), sans-serif" }}
+                  >
+                    {cat.name}
+                  </a>
+                );
+              })}
+            </div>
+            
+            {/* Right Arrow */}
+            {showRightArrow && (
+              <button 
+                onClick={() => scroll("right")}
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-1.5 bg-white/90 border border-gray-200 shadow-sm text-[#1a1a1a] hover:text-[#c41e2f] transition-all"
+                aria-label="Scroll right"
+              >
+                <ChevronRight size={16} />
+              </button>
+            )}
+
+            {/* Optional Shadow Indicators (Fade) - integrated with arrows or purely visual */}
+            <div className={`absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-white pointer-events-none transition-opacity duration-300 ${showRightArrow ? 'opacity-100' : 'opacity-0'}`} />
+            <div className={`absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-white pointer-events-none transition-opacity duration-300 ${showLeftArrow ? 'opacity-100' : 'opacity-0'}`} />
           </div>
 
           {/* Mobile dropdown */}
           {mobileOpen && (
-            <div className="md:hidden py-3 flex flex-wrap gap-1">
+            <div className="md:hidden py-3 flex flex-wrap gap-1 max-h-[60vh] overflow-y-auto no-scrollbar">
               {categories.map((cat) => {
                 const isActive = 
                   (cat.slug === "/" && pathname === "/") || 
@@ -175,6 +232,17 @@ export default function Navbar() {
           )}
         </div>
       </nav>
+
+      {/* Hide scrollbar styles */}
+      <style jsx global>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </>
   );
 }

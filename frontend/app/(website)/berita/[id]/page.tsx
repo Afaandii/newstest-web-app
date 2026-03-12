@@ -1,15 +1,8 @@
 import { notFound } from "next/navigation";
-import { getDummyNews, getDummyNewsById } from "@/lib/dummy-news";
+import { getPostById, getPosts } from "@/lib/news";
 import Link from "next/link";
 import { ArrowLeft, Clock, Share2 } from "lucide-react";
 import CommentsSection from "@/components/website/comments-section";
-
-export function generateStaticParams() {
-  const news = getDummyNews();
-  return news.map((article) => ({
-    id: article.id,
-  }));
-}
 
 export default async function NewsDetailPage({
   params,
@@ -17,15 +10,15 @@ export default async function NewsDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const article = getDummyNewsById(id);
+  const article = await getPostById(id);
 
   if (!article) {
     notFound();
   }
 
-  const allNews = getDummyNews();
+  const allNews = await getPosts();
   const relatedNews = allNews
-    .filter((a) => a.category === article.category && a.id !== article.id)
+    .filter((a) => a.Category?.name === article.Category?.name && a.id_post !== article.id_post)
     .slice(0, 4);
 
   const paragraphs = article.content.split("\n\n").filter((p) => p.trim());
@@ -44,7 +37,7 @@ export default async function NewsDetailPage({
           </Link>
           <span className="text-gray-300">/</span>
           <span className="text-[#c41e2f] font-semibold uppercase text-xs tracking-wider">
-            {article.category}
+            {article.Category?.name || "News"}
           </span>
         </div>
 
@@ -56,7 +49,7 @@ export default async function NewsDetailPage({
           <article className="lg:col-span-8 lg:border-r border-gray-200 lg:pr-10">
             {/* Category */}
             <span className="inline-block text-[11px] font-bold uppercase tracking-[0.2em] text-[#c41e2f] font-sans mb-4">
-              {article.category}
+              {article.Category?.name || "News"}
             </span>
 
             {/* Headline */}
@@ -69,14 +62,9 @@ export default async function NewsDetailPage({
 
             {/* Meta */}
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 font-sans mb-6 pb-5 border-b border-gray-200">
-              <span className="font-bold text-gray-800">{article.author}</span>
+              <span className="font-bold text-gray-800">{article.User?.name || ""}</span>
               <span className="text-gray-300">|</span>
-              <span>{article.date}</span>
-              <span className="text-gray-300">|</span>
-              <div className="flex items-center gap-1.5">
-                <Clock size={14} />
-                <span>{article.readTime} baca</span>
-              </div>
+              <span>{new Date(article.created_at).toLocaleDateString("id-ID", { day: 'numeric', month: 'long', year: 'numeric' })}</span>
               <button
                 className="ml-auto flex items-center gap-1.5 text-gray-400 hover:text-[#c41e2f] transition-colors"
                 aria-label="Share"
@@ -89,7 +77,7 @@ export default async function NewsDetailPage({
             {/* Hero Image */}
             <div className="relative aspect-video overflow-hidden bg-gray-100 mb-8">
               <img
-                src={article.imageUrl}
+                src={article.thumbnail || "/placeholder-news.jpg"}
                 alt={article.title}
                 className="w-full h-full object-cover"
               />
@@ -116,7 +104,7 @@ export default async function NewsDetailPage({
                   Topik:
                 </span>
                 <span className="px-3 py-1 text-xs font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer font-sans">
-                  {article.category}
+                  {article.Category?.name || "News"}
                 </span>
               </div>
             </div>
@@ -151,14 +139,14 @@ export default async function NewsDetailPage({
                   <div className="space-y-5">
                     {relatedNews.map((related) => (
                       <Link
-                        key={related.id}
-                        href={`/berita/${related.id}`}
+                        key={related.id_post}
+                        href={`/berita/${related.id_post}`}
                         className="group block"
                       >
                         <div className="flex gap-3">
                           <div className="flex-shrink-0 w-20 h-16 overflow-hidden bg-gray-100">
                             <img
-                              src={related.imageUrl}
+                              src={related.thumbnail || "/placeholder-news.jpg"}
                               alt={related.title}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             />
@@ -171,7 +159,7 @@ export default async function NewsDetailPage({
                               {related.title}
                             </h4>
                             <span className="text-[10px] text-gray-400 mt-1 block font-sans">
-                              {related.date}
+                              {new Date(related.created_at).toLocaleDateString("id-ID")}
                             </span>
                           </div>
                         </div>
@@ -192,12 +180,12 @@ export default async function NewsDetailPage({
                 </div>
                 <div className="space-y-4">
                   {allNews
-                    .filter((a) => a.id !== article.id)
+                    .filter((a) => a.id_post !== article.id_post)
                     .slice(0, 5)
-                    .map((news, i) => (
+                    .map((newsItem, i) => (
                       <Link
-                        key={news.id}
-                        href={`/berita/${news.id}`}
+                        key={newsItem.id_post}
+                        href={`/berita/${newsItem.id_post}`}
                         className="group block"
                       >
                         <div className="flex gap-3">
@@ -209,13 +197,13 @@ export default async function NewsDetailPage({
                           </span>
                           <div>
                             <span className="text-[10px] font-bold text-[#c41e2f] uppercase tracking-widest font-sans">
-                              {news.category}
+                              {newsItem.Category?.name || "News"}
                             </span>
                             <h4
                               className="text-sm font-bold text-[#1a1a1a] leading-tight mt-0.5 line-clamp-2 group-hover:text-[#c41e2f] transition-colors"
                               style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
                             >
-                              {news.title}
+                              {newsItem.title}
                             </h4>
                           </div>
                         </div>
