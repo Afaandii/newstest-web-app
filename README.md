@@ -1,1 +1,1 @@
-coming soon this description people
+the description coming soon bruh
