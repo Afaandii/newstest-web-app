@@ -113,7 +113,7 @@ export default function Navbar() {
           </div>
 
           {/* Masthead */}
-          <div className="text-center">
+          <div className="text-center mb-3">
             <a href="/">
               <h1
                 className="text-5xl md:text-7xl font-black tracking-tight text-[#1a1a1a]"
@@ -122,9 +122,6 @@ export default function Navbar() {
                 NewsTest
               </h1>
             </a>
-            <p className="text-[11px] tracking-[0.3em] uppercase text-gray-400 mt-1 font-sans">
-              Portal Berita Terpercaya
-            </p>
           </div>
         </div>
 
