@@ -12,6 +12,7 @@ type PostRepository interface {
 	Create(p *model.Post) error
 	Update(p *model.Post) error
 	Delete(id uint) error
+	Search(query string, sortBy string, limit, offset int) ([]model.Post, int64, error)
 }
 
 type postRepository struct {
@@ -47,4 +48,49 @@ func (r *postRepository) Update(p *model.Post) error {
 
 func (r *postRepository) Delete(id uint) error {
 	return r.db.Delete(&model.Post{}, "id_post = ?", id).Error
+}
+
+func (r *postRepository) Search(query string, sortBy string, limit, offset int) ([]model.Post, int64, error) {
+	var data []model.Post
+	var total int64
+	
+	errChan := make(chan error, 2)
+	
+	// Define sorting
+	orderClause := "created_at DESC"
+	if sortBy == "relevancy" {
+		// Use ts_rank for PostgreSQL Full Text Search relevancy
+		// We use plainto_tsquery for the search query
+		orderClause = "ts_rank(to_tsvector('indonesian', title || ' ' || content), plainto_tsquery('indonesian', '" + query + "')) DESC"
+	}
+
+	// Query for data
+	go func() {
+		err := r.db.Model(&model.Post{}).
+			Preload("User").
+			Preload("Category").
+			Where("title LIKE ? OR content LIKE ?", "%"+query+"%", "%"+query+"%").
+			Limit(limit).
+			Offset(offset).
+			Order(orderClause).
+			Find(&data).Error
+		errChan <- err
+	}()
+	
+	// Query for total count
+	go func() {
+		err := r.db.Model(&model.Post{}).
+			Where("title LIKE ? OR content LIKE ?", "%"+query+"%", "%"+query+"%").
+			Count(&total).Error
+		errChan <- err
+	}()
+	
+	// Wait for both results
+	for i := 0; i < 2; i++ {
+		if err := <-errChan; err != nil {
+			return nil, 0, err
+		}
+	}
+	
+	return data, total, nil
 }

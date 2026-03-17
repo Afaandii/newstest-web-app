@@ -14,8 +14,8 @@ type Post struct {
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 
-	User     User      `gorm:"foreignKey:UserRef;references:IDUser"`
-	Category Category  `gorm:"foreignKey:CategoryRef;references:IDCategory"`
+	User     User      `json:"user" gorm:"foreignKey:UserRef;references:IDUser"`
+	Category Category  `json:"category" gorm:"foreignKey:CategoryRef;references:IDCategory"`
 	Comments []Comment `gorm:"foreignKey:PostRef;references:IDPost"`
 }
 

@@ -186,3 +186,35 @@ func (h *Handler) Delete(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Deleted post successfully!"})
 }
+
+func (h *Handler) Search(c *gin.Context) {
+	query := c.Query("q")
+	sortBy := c.DefaultQuery("sort", "newest")
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
+
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 {
+		limit = 10
+	}
+
+	offset := (page - 1) * limit
+
+	posts, total, err := h.service.Search(query, sortBy, limit, offset)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+		"data":   posts,
+		"meta": gin.H{
+			"total": total,
+			"page":  page,
+			"limit": limit,
+		},
+	})
+}

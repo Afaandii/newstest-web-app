@@ -22,6 +22,7 @@ type Service interface {
 	Create(req PostRequest) (*model.Post, error)
 	Update(id uint, req PostRequest, hasNewThumbnail bool) (*model.Post, error)
 	Delete(id uint) error
+	Search(query string, sortBy string, limit, offset int) ([]model.Post, int64, error)
 }
 
 type service struct {
@@ -81,4 +82,8 @@ func (s *service) Update(id uint, req PostRequest, hasNewThumbnail bool) (*model
 
 func (s *service) Delete(id uint) error {
 	return s.repo.Delete(id)
+}
+
+func (s *service) Search(query string, sortBy string, limit, offset int) ([]model.Post, int64, error) {
+	return s.repo.Search(query, sortBy, limit, offset)
 }
