@@ -110,18 +110,7 @@ export default async function NewsDetailPage({
             </div>
 
             {/* Comments */}
-            <CommentsSection />
-
-            {/* Back link */}
-            <div className="mt-8 pb-8">
-              <Link
-                href="/"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-[#c41e2f] hover:text-[#a01825] transition-colors font-sans"
-              >
-                <ArrowLeft size={16} />
-                Kembali ke Beranda
-              </Link>
-            </div>
+            <CommentsSection postId={article.id_post} />
           </article>
 
           {/* Sidebar */}
