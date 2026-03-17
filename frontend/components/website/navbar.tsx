@@ -161,6 +161,15 @@ export default function Navbar() {
                     type="text"
                     placeholder="Cari berita..."
                     autoFocus
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        const val = e.currentTarget.value;
+                        if (val.trim()) {
+                          router.push(`/search?q=${encodeURIComponent(val)}`);
+                          setSearchOpen(false);
+                        }
+                      }
+                    }}
                     className="absolute right-10 top-1/2 -translate-y-1/2 w-48 md:w-64 px-4 py-2 text-sm text-gray-800 placeholder:text-gray-400 outline-none bg-gray-100 border border-gray-300 rounded"
                   />
                 )}
