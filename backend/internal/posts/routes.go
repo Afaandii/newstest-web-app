@@ -15,6 +15,7 @@ func RegisterRoutesPosts(r *gin.Engine, db *gorm.DB, cfg *bootstrap.Config) {
 	group := r.Group("/v1/posts")
 	{
 		group.GET("", handler.GetAll)
+		group.GET("/search", handler.Search)
 		group.GET("/:id", handler.GetByID)
 		group.POST("", handler.Create)
 		group.PUT("/:id", handler.Update)
