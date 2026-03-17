@@ -13,6 +13,7 @@ import (
 	"newstest-app/internal/role"
 	rolepermissions "newstest-app/internal/rolePermissions"
 	"newstest-app/internal/user"
+	"newstest-app/internal/comments"
 
 	"newstest-app/pkg/middleware"
 
@@ -39,6 +40,7 @@ func main() {
 	user.RegisterRouteUser(r, db, cfg)
 	auth.RegisterRoutesAuth(r, db, cfg)
 	dashboard.RegisterRoutesDashboard(r, db, cfg)
+	comments.RegisterRoutesComments(r, db, cfg)
 
 	if cfg.PORT == "" {
 		cfg.PORT = "8080"
